@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
+import 'package:motion_tab_bar/MotionTabBarController.dart';
+
 import '../../app/locator.dart';
 import '../../app/routes/setup_routes.router.dart';
 import '../../base/custom_base_view_model.dart';
@@ -9,17 +12,17 @@ class MainScreenViewModel extends CustomIndexTrackingViewModel {
   final CustomBaseViewModel _baseViewModel = locator<CustomBaseViewModel>();
 
   initializeSocket() async {
-    SocketService _socketService = _baseViewModel.getSocketService();
+    SocketService socketService = _baseViewModel.getSocketService();
     String? userId = await _baseViewModel.getAuthService().getUserid();
 
     if (userId != null) {
-      connectToSocket(_socketService,userId);
+      connectToSocket(socketService,userId);
       Timer.periodic(
         const Duration(seconds: 5),
         (Timer timer) async{
           String? userId = await _baseViewModel.getAuthService().getUserid();
           if(userId != null){
-            connectToSocket(_socketService,userId);
+            connectToSocket(socketService,userId);
           }
         },
       );

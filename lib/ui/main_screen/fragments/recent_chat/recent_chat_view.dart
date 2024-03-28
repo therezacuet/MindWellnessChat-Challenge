@@ -8,12 +8,13 @@ import '../../../../config/color_config.dart';
 import '../../../../data/local/app_database.dart';
 import '../../../../models/user/user_basic_data_model.dart';
 import '../../../../utils/date_time_util.dart';
+import '../../../widgets/search_appbar_widget.dart';
 import '../../../widgets/single_chat_widget.dart';
 
 class RecentChatView extends StatelessWidget {
-  Function gotoSearchCallback;
+  final Function gotoSearchCallback;
 
-  RecentChatView(this.gotoSearchCallback, {super.key});
+  const RecentChatView(this.gotoSearchCallback, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +27,15 @@ class RecentChatView extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(56.0),
-            child: Container()
+            preferredSize: const Size.fromHeight(56.0),
+            child: SearchAppBarWidget(
+              onChange: (String val) {
+                // TODO: Add your logic to from search recent chat
+              },
+              onDone: (String val) {},
+              onClose: () {},
+              onCleared: () {},
+            ),
           ),
           body: Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -41,9 +49,9 @@ class RecentChatView extends StatelessWidget {
 }
 
 class AllRecentChatDisplayWidget extends ViewModelWidget<RecentChatViewModel> {
-  Function gotoSearchCallback;
+  final Function gotoSearchCallback;
 
-  AllRecentChatDisplayWidget(this.gotoSearchCallback);
+  const AllRecentChatDisplayWidget(this.gotoSearchCallback, {super.key});
 
   @override
   Widget build(BuildContext context, RecentChatViewModel viewModel) {
@@ -51,9 +59,7 @@ class AllRecentChatDisplayWidget extends ViewModelWidget<RecentChatViewModel> {
       stream: viewModel.getRecentChats(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
-
           if (snapshot.hasData) {
-
             if(snapshot.data!.length == 0){
               return EmptyChatScreen(
                 buttonPressedCallBack: () {
@@ -62,52 +68,35 @@ class AllRecentChatDisplayWidget extends ViewModelWidget<RecentChatViewModel> {
               );
             }
 
-            print("HEt :- " + snapshot.data!.length.toString());
-
             return ListView.separated(
-              key: const PageStorageKey(
-                  'listview-recent-chat-maintain-state-key'),
+              key: const PageStorageKey('listview-recent-chat-maintain-state-key'),
               itemCount: snapshot.data!.length,
               // controller: _msgScrollController,
               itemBuilder: (BuildContext context, int index) {
-                RecentChatTableData _recentChatTableData =
-                    snapshot.data![index];
+                RecentChatTableData recentChatTableData = snapshot.data![index];
 
                 String name = "";
                 String? compressedProfileImage;
-
-                int indexOfUserId = _recentChatTableData.participants
-                    .indexWhere((element) => element == viewModel.userId);
-
-                String lastMsg = _recentChatTableData.last_msg_text ?? "";
-
-                name = _recentChatTableData.user_name;
-                compressedProfileImage =
-                    _recentChatTableData.user_compressed_image;
-
-                List<String> participants = List.from(_recentChatTableData.participants);
-
-                print("participants 0:- " + participants.toString());
-
+                String lastMsg = recentChatTableData.last_msg_text ?? "";
+                name = recentChatTableData.user_name;
+                compressedProfileImage = recentChatTableData.user_compressed_image;
+                List<String> participants = List.from(recentChatTableData.participants);
                 participants.removeWhere((element) => element == viewModel.userId);
-
-                print("participants 1 :- " + participants.toString());
 
                 return SingleChatWidget(
                   chatClickCallback: () {
-                    UserDataBasicModel _userDataBasicModel = UserDataBasicModel(
+                    UserDataBasicModel userDataBasicModel = UserDataBasicModel(
                         name: name,
                         id: participants[0],
                         statusLine: "",
                         compressedProfileImage: compressedProfileImage);
-                    viewModel.gotoChatScreen(_userDataBasicModel);
+                    viewModel.gotoChatScreen(userDataBasicModel);
                   },
                   name: name,
                   description: lastMsg,
                   compressedProfileImage: compressedProfileImage,
-                  time: DateTimeUtil()
-                      .getTimeAgo(_recentChatTableData.last_msg_time),
-                  unreadMessage: _recentChatTableData.unread_msg,
+                  time: DateTimeUtil().getTimeAgo(recentChatTableData.last_msg_time),
+                  unreadMessage: recentChatTableData.unread_msg,
                 );
               },
               separatorBuilder: (BuildContext context, int index) => Divider(

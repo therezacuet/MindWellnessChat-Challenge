@@ -7,9 +7,9 @@ class RecentChatViewModel extends CustomBaseViewModel {
   String userId = "";
 
   Stream<List<RecentChatTableData>> getRecentChats() {
-    Stream<List<RecentChatTableData>>? _msgStream =
+    Stream<List<RecentChatTableData>>? msgStream =
         getDataManager().watchRecentChat();
-    return _msgStream;
+    return msgStream;
   }
 
   getUserId() async{

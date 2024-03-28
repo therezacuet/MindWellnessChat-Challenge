@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mind_wellness_chat/config/color_config.dart';
+import 'package:mind_wellness_chat/const/app_const.dart';
+import 'package:motion_tab_bar/MotionTabBar.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../config/color_config.dart';
 import 'fragments/profile/profile_view.dart';
 import 'fragments/recent_chat/recent_chat_view.dart';
 import 'fragments/search/search_view.dart';
 import 'main_screen_view_model.dart';
 
 class MainScreenView extends StatelessWidget {
-  const MainScreenView({Key? key}) : super(key: key);
+  const MainScreenView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,50 +24,27 @@ class MainScreenView extends StatelessWidget {
             body: getViewForIndex(model.currentIndex,(){
               model.setIndex(1);
             }),
-            bottomNavigationBar: BottomNavigationBar(
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              // fixedColor: ColorConfig.accentColor,
-              selectedItemColor: ColorConfig.accentColor,
-              // type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.white,
-              currentIndex: model.currentIndex,
-              onTap: model.setIndex,
-              items: [
-                BottomNavigationBarItem(
-                  activeIcon: Container(
-                    padding: const EdgeInsets.only(top: 8, bottom: 4),
-                    child: SvgPicture.asset("assets/icons/chat_icon.svg",color: ColorConfig.accentColor,),
-                  ),
-                  icon: Container(
-                    padding: const EdgeInsets.only(top: 8, bottom: 4),
-                    child: SvgPicture.asset("assets/icons/chat_icon.svg",),
-                  ),
-                  label:'Chat',
-                ),
-                BottomNavigationBarItem(
-                  activeIcon: Container(
-                    padding: const EdgeInsets.only(top: 8, bottom: 4),
-                    child: SvgPicture.asset("assets/icons/search_icon.svg",color: ColorConfig.accentColor,),
-                  ),
-                  icon: Container(
-                    padding: const EdgeInsets.only(top: 8, bottom: 4),
-                    child: SvgPicture.asset("assets/icons/search_icon.svg"),
-                  ),
-                  label:'Search',
-                ),
-                BottomNavigationBarItem(
-                  activeIcon: Container(
-                    padding:const  EdgeInsets.only(top: 8, bottom: 4),
-                    child: SvgPicture.asset("assets/icons/profile_icon.svg",color: ColorConfig.accentColor,),
-                  ),
-                  icon: Container(
-                    padding:const  EdgeInsets.only(top: 8, bottom: 4),
-                    child: SvgPicture.asset("assets/icons/profile_icon.svg"),
-                  ),
-                  label:'Profile',
-                ),
-              ],
+            bottomNavigationBar: MotionTabBar(
+              initialSelectedTab: AppConst.menuItemChat,
+              useSafeArea: true,
+              labels: const [AppConst.menuItemChat, AppConst.menuItemSearch, AppConst.menuItemProfile],
+              icons: const [Icons.chat, Icons.search, Icons.account_circle_outlined],
+              tabSize: 50,
+              tabBarHeight: 55,
+              textStyle: const TextStyle(
+                fontSize: 12,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+              tabIconColor: ColorConfig.tabIconColor,
+              tabIconSize: 28.0,
+              tabIconSelectedSize: 26.0,
+              tabSelectedColor: ColorConfig.accentColor,
+              tabIconSelectedColor: Colors.white,
+              tabBarColor: Colors.white,
+              onTabItemSelected: (int value) {
+                model.setIndex(value);
+              },
             ),
           );
         },

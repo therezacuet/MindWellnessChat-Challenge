@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:mind_wellness_chat/const/app_const.dart';
 import 'package:mind_wellness_chat/services/firebase_push_notification_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -53,6 +54,9 @@ class MyApp extends StatelessWidget {
     FirebasePushNotificationService notificationService = locator<FirebasePushNotificationService>();
     notificationService.initMessaging();
 
+    // Update status bar color
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: ColorConfig.accentColor));
+
     EasyLoading.instance
       ..indicatorType = EasyLoadingIndicatorType.ring
       ..loadingStyle = EasyLoadingStyle.custom
@@ -64,7 +68,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       builder: EasyLoading.init(),
-      title: 'MindWellness Chat',
+      title: AppConst.appName,
       navigatorKey: StackedService.navigatorKey,
       onGenerateRoute: StackedRouter().onGenerateRoute,
       initialRoute: "/",

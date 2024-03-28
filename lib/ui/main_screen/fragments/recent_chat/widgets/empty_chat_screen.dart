@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mind_wellness_chat/config/size_config.dart';
+import 'package:mind_wellness_chat/const/app_const.dart';
 import '../../../../../app/routes/style_config.dart';
 import '../../../../widgets/custom_button.dart';
 
@@ -26,19 +27,19 @@ class EmptyChatScreen extends StatelessWidget {
           SizedBox(
             height: 3.vertical(),
           ),
-          Text("No Conversation, yet",style: h1Title.copyWith(
+          Text(AppConst.emptyChatMsgTitle,style: h1Title.copyWith(
               fontSize: 22
           ),),
           const SizedBox(
             height: 18,
           ),
-          Text("Find interesting people by searching them and start the conversation",style: h4Title,textAlign: TextAlign.center,),
+          Text(AppConst.emptyChatMsgSubTitle,style: h4Title,textAlign: TextAlign.center,),
           SizedBox(
             height: 3.vertical(),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: CustomButton("Start Searching",height: 50,buttonPressed: buttonPressedCallBack),
+            child: CustomButton(AppConst.emptyChatButtonLabel,height: 50,buttonPressed: buttonPressedCallBack),
           )
         ],
       ),

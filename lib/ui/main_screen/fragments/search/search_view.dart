@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:mind_wellness_chat/config/size_config.dart';
+import 'package:mind_wellness_chat/const/app_const.dart';
 import 'package:mind_wellness_chat/ui/main_screen/fragments/search/search_view_model.dart';
-import 'package:mind_wellness_chat/ui/main_screen/fragments/search/widgets/no_search_result_found_widget.dart';
-import 'package:mind_wellness_chat/ui/main_screen/fragments/search/widgets/start_searching_widget.dart';
+import 'package:mind_wellness_chat/ui/main_screen/fragments/search/widgets/search_result_display_list.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../../app/locator.dart';
 import '../../../../config/color_config.dart';
 import '../../../../models/user/user_basic_data_model.dart';
-import '../../../widgets/single_chat_widget.dart';
-
 
 class SearchView extends StatelessWidget {
   const SearchView({Key? key}) : super(key: key);
@@ -50,7 +47,7 @@ class SearchView extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
-                        "Search",
+                        AppConst.searchHeaderTitle,
                         style: TextStyle(
                             fontSize: 24,
                             letterSpacing: 0.5,
@@ -58,7 +55,7 @@ class SearchView extends StatelessWidget {
                             fontWeight: FontWeight.w600),
                       ),
                       const Text(
-                        "Find amazing people to chat",
+                        AppConst.searchHeaderSubtitleTitle,
                         style: TextStyle(
                             fontSize: 15,
                             letterSpacing: 0.5,
@@ -79,7 +76,7 @@ class SearchView extends StatelessWidget {
                           filled: true,
                           fillColor: ColorConfig.greyColor6,
                           prefixIcon: const Icon(Icons.search),
-                          hintText: 'Search here...',
+                          hintText: AppConst.searchHint,
                           contentPadding: const EdgeInsets.only(
                               left: 26.0, bottom: 16.0, top: 18.0),
                         ),
@@ -101,143 +98,6 @@ class SearchView extends StatelessWidget {
         },
         viewModelBuilder: () => locator<SearchViewModel>(),
       ),
-    );
-  }
-}
-
-class SearchResultDisplayList extends ViewModelWidget<SearchViewModel> {
-  static const _pageSize = 14; //We declared this in server
-
-  PagingController<int, UserDataBasicModel> _pagingController;
-
-  SearchResultDisplayList(this._pagingController, {Key? key})
-      : super(key: key, reactive: true);
-
-  @override
-  Widget build(BuildContext context, SearchViewModel viewModel) {
-    // if (viewModel.anyObjectsBusy) {
-    //   return const Center(child: CircularProgressIndicator());
-    // }
-
-    // PagingController<int, UserDataBasicModel> _pagingController = PagingController(firstPageKey: 0);
-
-    print("CALLIG 123" + viewModel.reInitializePagingController.toString());
-
-    if (viewModel.reInitializePagingController) {
-      _pagingController.removeListener(() {});
-      _pagingController.removePageRequestListener((pageKey) {});
-      _pagingController.removeStatusListener((status) {});
-      _pagingController.refresh();
-
-      _pagingController = PagingController(firstPageKey: 0);
-      _pagingController.addPageRequestListener(
-        (pageKey) async {
-          List<UserDataBasicModel> searchResultData =
-              await viewModel.loadSearchUserData();
-
-          final isLastPage = searchResultData.length < _pageSize;
-          if (isLastPage) {
-            _pagingController.appendLastPage(searchResultData);
-          } else {
-            final nextPageKey = pageKey + searchResultData.length;
-            _pagingController.appendPage(searchResultData, nextPageKey);
-          }
-          viewModel.setPagingController(_pagingController);
-        },
-      );
-    }
-
-    // if (viewModel.loadInitialDataComplete) {
-    //   int pageKey = 0;
-    //   final nextPageKey = pageKey + viewModel.searchResultList.length;
-    //   _pagingController.appendPage(viewModel.searchResultList,nextPageKey);
-    // }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Padding(
-        //   padding:
-        //       const EdgeInsets.only(left: 26, top: 6, right: 18, bottom: 14),
-        //   child: ResultCountWidget(2),
-        // ),
-        Flexible(
-          child: viewModel.textForSearch == "" ||
-                  viewModel.textForSearch.length < 2
-              ? const SingleChildScrollView(child: StartSearchingWidget())
-              : PagedListView<int, UserDataBasicModel>.separated(
-                  pagingController: _pagingController,
-                  key: const PageStorageKey('listview-maintain-state-key'),
-                  // itemCount: viewModel.searchResultList.length,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  separatorBuilder: (BuildContext context, int index) =>
-                      const Divider(
-                    height: 0,
-                  ),
-                  builderDelegate:
-                      PagedChildBuilderDelegate<UserDataBasicModel>(
-                    itemBuilder:
-                        (context, UserDataBasicModel _userBasicModel, index) {
-                      return SingleChatWidget(
-                        chatClickCallback: () {
-                          viewModel.gotoChatScreen(_userBasicModel);
-                        },
-                        name: _userBasicModel.name,
-                        description: _userBasicModel.statusLine,
-                        compressedProfileImage:
-                            _userBasicModel.compressedProfileImage,
-                      );
-                    },
-                    noItemsFoundIndicatorBuilder: (_) =>
-                        const SingleChildScrollView(
-                      child: NoSearchResultFoundWidget(),
-                    ),
-                  ),
-                ),
-        ),
-      ],
-    );
-  }
-}
-
-class ResultCountWidget extends StatelessWidget {
-  int totalResultCount = 20;
-
-  ResultCountWidget(this.totalResultCount, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        RichText(
-          text: TextSpan(children: [
-            TextSpan(
-              text: totalResultCount.toString(),
-              style: TextStyle(
-                  color: ColorConfig.accentColor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900),
-            ),
-            TextSpan(
-              text: " RESULTS",
-              style: TextStyle(
-                  color: ColorConfig.accentColor,
-                  letterSpacing: 0.5,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500),
-            ),
-          ]),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 4),
-          child: Container(
-            height: 1,
-            color: Colors.black38,
-            width: 38,
-          ),
-        )
-      ],
     );
   }
 }

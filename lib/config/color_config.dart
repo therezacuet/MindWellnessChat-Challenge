@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class ColorConfig {
   static Color primaryColor = Colors.white;
-  static Color accentColor = const Color(0xffDEAC43);
+  static Color accentColor = const Color(0xff116782);
   static Color backgroundColor = const Color(0xffE4E4E4);
+  static Color tabIconColor = const Color(0xff08898a);
 
   static Color greyColor = const Color(0xff828282);
   static Color greyColor2 = const Color(0xff4F4F4F);

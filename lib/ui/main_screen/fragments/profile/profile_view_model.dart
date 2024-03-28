@@ -40,9 +40,8 @@ class ProfileViewModel extends CustomBaseViewModel {
 
   logoutUser() async {
     DialogResponse? _dialogResponse = await getDialogService().showCustomDialog(
-        title: "Logout",
-        description:
-            "Are you sure that you want to logout from application. All saved data will be lost.",
+        title: AppConst.logoutDialogTitle,
+        description:AppConst.logoutDialogMsg,
         variant: DialogEnum.confirmation);
 
     if (_dialogResponse != null) {
@@ -50,7 +49,6 @@ class ProfileViewModel extends CustomBaseViewModel {
         showProgressBar();
         await getSocketService().disconnectFromSocket();
         await getAuthService().logOut();
-        //await getAppDatabase().deleteAllTables();
         bool result = await getDataManager().clearSharedPreference();
         if(result){
           stopProgressBar();
@@ -61,48 +59,45 @@ class ProfileViewModel extends CustomBaseViewModel {
   }
 
   changeProfilePicture() async {
-    File _imageFile;
+    File imageFile;
     final ImagePicker _picker = ImagePicker();
     XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       showProgressBar();
-      _imageFile = File(pickedFile.path);
+      imageFile = File(pickedFile.path);
 
       CroppedFile? croppedImage = await ImageCropper().cropImage(
-          sourcePath: _imageFile.path,
+          sourcePath: imageFile.path,
           aspectRatio: const CropAspectRatio(ratioX: 4, ratioY: 5),
           cropStyle: CropStyle.circle);
 
       if (croppedImage != null) {
         final dir = await getTemporaryDirectory();
-        final targetPath = dir.absolute.path +
-            "/" +
-            DateTime.now().millisecondsSinceEpoch.toString() +
-            basename(croppedImage.path);
+        final targetPath = "${dir.absolute.path}/${DateTime.now().millisecondsSinceEpoch}${basename(croppedImage.path)}";
 
         File? compressedImage = (await compressFile(croppedImage as File, targetPath)) as File?;
 
         if (compressedImage != null) {
-          List<File> _imagesFile = [croppedImage as File, compressedImage];
-          List<String> listOfUrl = await uploadFiles(_imagesFile);
+          List<File> imagesFile = [croppedImage as File, compressedImage];
+          List<String> listOfUrl = await uploadFiles(imagesFile);
           if (listOfUrl.isNotEmpty) {
-            UserImageModel _userImageModel = UserImageModel(
+            UserImageModel userImageModel = UserImageModel(
                 profileImage: listOfUrl[0],
                 compressedProfileImage: listOfUrl[1]);
-            ApiResult<bool> _uploadImageResult =
-                await getDataManager().updateImageOfUser(_userImageModel);
-            await _uploadImageResult.when<FutureOr>(
+            ApiResult<bool> uploadImageResult =
+                await getDataManager().updateImageOfUser(userImageModel);
+            await uploadImageResult.when<FutureOr>(
                 success: (bool result) async {
-              UserBasicDataOfflineModel? _userBasicDataOfflineModel =
+              UserBasicDataOfflineModel? userBasicDataOfflineModel =
                   await getDataManager().getUserBasicDataOfflineModel();
-              if (_userBasicDataOfflineModel != null) {
-                _userBasicDataOfflineModel.profileImage =
-                    _userImageModel.profileImage;
-                _userBasicDataOfflineModel.compressedProfileImage =
-                    _userImageModel.compressedProfileImage;
+              if (userBasicDataOfflineModel != null) {
+                userBasicDataOfflineModel.profileImage =
+                    userImageModel.profileImage;
+                userBasicDataOfflineModel.compressedProfileImage =
+                    userImageModel.compressedProfileImage;
                 await getDataManager()
-                    .saveUserBasicDataOfflineModel(_userBasicDataOfflineModel);
-                profileImage = _userImageModel.profileImage;
+                    .saveUserBasicDataOfflineModel(userBasicDataOfflineModel);
+                profileImage = userImageModel.profileImage;
                 notifyListeners();
               }
             }, failure: (NetworkExceptions e) {
@@ -114,19 +109,17 @@ class ProfileViewModel extends CustomBaseViewModel {
           }
         } else {
           stopProgressBar();
-          showErrorDialog(
-              description: "Problem occurred in compressing please try again");
+          showErrorDialog(description: "Problem occurred in compressing please try again");
         }
       } else {
         stopProgressBar();
-        showErrorDialog(
-            description: "Problem occurred in cropping image please try again");
+        showErrorDialog(description: "Problem occurred in cropping image please try again");
       }
     }
   }
 
   Future<List<String>> uploadFiles(List<File> _images) async {
-    print("image uploading :- " + _images.length.toString());
+    print("image uploading :- ${_images.length}");
 
     List<String> downloadedUrlList = [];
 
