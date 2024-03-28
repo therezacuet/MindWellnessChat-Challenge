@@ -46,6 +46,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    FirebasePushNotificationService _notificationService = locator<FirebasePushNotificationService>();
+    _notificationService.initMessaging();
+
     EasyLoading.instance
       ..indicatorType = EasyLoadingIndicatorType.ring
       ..loadingStyle = EasyLoadingStyle.custom

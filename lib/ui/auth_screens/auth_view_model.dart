@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../app/locator.dart';
+import '../../app/routes/setup_routes.router.dart';
 import '../../base/custom_base_view_model.dart';
 import '../../base/custom_index_tracking_view_model.dart';
 import '../../const/app_const.dart';
@@ -149,10 +150,10 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
     _customBaseViewModel.showProgressBar();
     String smsCode = enteredOtp.trim();
 
-    String isSuccess =
-    await _customBaseViewModel.getAuthService().signInWithOTP(smsCode,verificationId);
+    String isSuccess = await _customBaseViewModel.getAuthService().signInWithOTP(smsCode,verificationId);
 
     if (isSuccess == "noError") {
+      print("Phone number verified");
       phoneNumberVerified();
     } else {
       _customBaseViewModel.stopProgressBar();
@@ -191,16 +192,14 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
   }
 
   phoneNumberVerified() async {
-    String tokenId = await _customBaseViewModel.getFirebasePushNotificationService()
-        .getFcmToken();
+    String tokenId = await _customBaseViewModel.getFirebasePushNotificationService().getFcmToken();
     String? id;
 
     id = await _customBaseViewModel.getAuthService().getUserid();
 
     if (id == null) {
       _customBaseViewModel.stopProgressBar();
-      await _customBaseViewModel.showErrorDialog(
-          description: "Please logout and try again");
+      await _customBaseViewModel.showErrorDialog(description: "Please logout and try again");
       return;
     }
 
@@ -212,14 +211,13 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
           phoneNumber: phoneNumber,
           statusLine: AppConst.defaultStatusOfUser);
 
-      ApiResult<bool> result = await _customBaseViewModel
-          .getDataManager()
-          .createUser(_userCreateModel);
+      ApiResult<bool> result = await _customBaseViewModel.getDataManager().createUser(_userCreateModel);
 
       result.when(success: (bool result) async {
         await signInWithFirebaseAndGoToMainScreen(id!);
       }, failure: (NetworkExceptions e) async {
         _customBaseViewModel.stopProgressBar();
+        print(NetworkExceptions.getDioException(e));
         if(NetworkExceptions.getDioException(e) ==  const NetworkExceptions.conflict()){
           await _customBaseViewModel.showErrorDialog(
               description: "User already exist please login");
@@ -239,6 +237,7 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
         await signInWithFirebaseAndGoToMainScreen(id!);
       }, failure: (NetworkExceptions e) async {
         _customBaseViewModel.stopProgressBar();
+        print(NetworkExceptions.getDioException(e));
         if (e == const NetworkExceptions.notFound()) {
           await _customBaseViewModel.showErrorDialog(
               title: "Account not exist",
@@ -253,6 +252,8 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
 
   signInWithFirebaseAndGoToMainScreen(String id) async {
 
+    print("signInWithFirebaseAndGoToMainScreen");
+
     if (isSignUpScreen) {
       UserBasicDataOfflineModel _userBasicDataOfflineModel =
       UserBasicDataOfflineModel(
@@ -266,7 +267,7 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
           .saveUserBasicDataOfflineModel(_userBasicDataOfflineModel);
       _customBaseViewModel.stopProgressBar();
       if (resultOfSavingData) {
-        //_customBaseViewModel.getNavigationService().clearStackAndShow(Routes.mainScreenView);
+        _customBaseViewModel.getNavigationService().clearStackAndShow(Routes.mainScreenView);
       } else {
         _customBaseViewModel.showErrorDialog(
             description: "Some problem occurred in saving data");
@@ -290,9 +291,10 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
               if(model.isBackUpFound){
                 _customBaseViewModel.stopProgressBar();
                 //_customBaseViewModel.getNavigationService().clearStackAndShow(Routes.backUpFoundScreen);
+                print("Backup found");
               }else{
                 _customBaseViewModel.stopProgressBar();
-                //_customBaseViewModel.getNavigationService().clearStackAndShow(Routes.mainScreenView);
+                _customBaseViewModel.getNavigationService().clearStackAndShow(Routes.mainScreenView);
               }
 
             }, failure: (NetworkExceptions e){
