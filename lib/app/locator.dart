@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:mind_wellness_chat/ui/auth_screens/auth_view_model.dart';
+import 'package:mind_wellness_chat/ui/main_screen/fragments/profile/profile_view_model.dart';
 import 'package:stacked_services/stacked_services.dart';
 import '../base/custom_base_view_model.dart';
 import '../data/data_manager.dart';
@@ -32,6 +33,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => SearchViewModel());
   locator.registerLazySingleton(() => MainScreenViewModel());
   locator.registerLazySingleton(() => ChatViewModel());
+  locator.registerLazySingleton(() => ProfileViewModel());
 
   // firebase
   locator.registerLazySingleton(() => FirebaseAuthService());

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../config/color_config.dart';
+import 'fragments/profile/profile_view.dart';
 import 'fragments/recent_chat/recent_chat_view.dart';
 import 'fragments/search/search_view.dart';
 import 'main_screen_view_model.dart';
@@ -83,6 +84,8 @@ Widget getViewForIndex(int index,Function gotoSearchScreen) {
       });
     case 1:
       return const SearchView();
+    case 2:
+      return const ProfileView();
     default:
       return RecentChatView((){
         gotoSearchScreen();
