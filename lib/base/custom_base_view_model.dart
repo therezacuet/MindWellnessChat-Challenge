@@ -64,8 +64,8 @@ class CustomBaseViewModel extends BaseViewModel {
     getNavigationService().back();
   }
 
-  gotoChatScreen(UserDataBasicModel _userBasicDataModel) {
-    getNavigationService().navigateTo(Routes.chatView, arguments: ChatViewArguments(userDataBasicModel: _userBasicDataModel));
+  gotoChatScreen(UserDataBasicModel userBasicDataModel) {
+    getNavigationService().navigateTo(Routes.chatView, arguments: ChatViewArguments(userDataBasicModel: userBasicDataModel));
   }
 
   logOut({bool shouldRedirectToAuthenticationPage = true}) async {

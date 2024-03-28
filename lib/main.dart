@@ -10,6 +10,8 @@ import 'package:stacked_services/stacked_services.dart';
 
 import 'app/locator.dart';
 import 'app/routes/setup_routes.router.dart';
+import 'app/setup_bottom_sheet.dart';
+import 'app/setup_dialog.dart';
 import 'config/color_config.dart';
 import 'firebase_options.dart';
 
@@ -26,6 +28,8 @@ void main() {
       );
 
       setupLocator();
+      setUpBottomSheet();
+      setupDialogUi();
       runApp(const MyApp());
     });
   }, (error, trace) async {
@@ -46,8 +50,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    FirebasePushNotificationService _notificationService = locator<FirebasePushNotificationService>();
-    _notificationService.initMessaging();
+    FirebasePushNotificationService notificationService = locator<FirebasePushNotificationService>();
+    notificationService.initMessaging();
 
     EasyLoading.instance
       ..indicatorType = EasyLoadingIndicatorType.ring

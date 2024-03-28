@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,9 +7,8 @@ import '../main.dart';
 
 class FirebasePushNotificationService {
   Future<String> getFcmToken() async {
-    FirebaseMessaging _fcm = FirebaseMessaging.instance;
-    String? fcmToken = await _fcm.getToken();
-
+    FirebaseMessaging fcm = FirebaseMessaging.instance;
+    String? fcmToken = await fcm.getToken();
     return fcmToken.toString();
   }
 
