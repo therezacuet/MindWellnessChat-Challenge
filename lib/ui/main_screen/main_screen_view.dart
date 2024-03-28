@@ -14,42 +14,40 @@ class MainScreenView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ViewModelBuilder<MainScreenViewModel>.reactive(
-        onViewModelReady: (MainScreenViewModel viewModel){
-          viewModel.initializeSocket();
-        },
-        builder: (context, model, child) {
-          return Scaffold(
-            body: getViewForIndex(model.currentIndex,(){
-              model.setIndex(1);
-            }),
-            bottomNavigationBar: MotionTabBar(
-              initialSelectedTab: AppConst.menuItemChat,
-              useSafeArea: true,
-              labels: const [AppConst.menuItemChat, AppConst.menuItemSearch, AppConst.menuItemProfile],
-              icons: const [Icons.chat, Icons.search, Icons.account_circle_outlined],
-              tabSize: 50,
-              tabBarHeight: 55,
-              textStyle: const TextStyle(
-                fontSize: 12,
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-              ),
-              tabIconColor: ColorConfig.tabIconColor,
-              tabIconSize: 28.0,
-              tabIconSelectedSize: 26.0,
-              tabSelectedColor: ColorConfig.accentColor,
-              tabIconSelectedColor: Colors.white,
-              tabBarColor: Colors.white,
-              onTabItemSelected: (int value) {
-                model.setIndex(value);
-              },
+    return ViewModelBuilder<MainScreenViewModel>.reactive(
+      onViewModelReady: (MainScreenViewModel viewModel){
+        viewModel.initializeSocket();
+      },
+      builder: (context, model, child) {
+        return Scaffold(
+          body: getViewForIndex(model.currentIndex,(){
+            model.setIndex(1);
+          }),
+          bottomNavigationBar: MotionTabBar(
+            initialSelectedTab: AppConst.menuItemChat,
+            useSafeArea: true,
+            labels: const [AppConst.menuItemChat, AppConst.menuItemSearch, AppConst.menuItemProfile],
+            icons: const [Icons.chat, Icons.search, Icons.account_circle_outlined],
+            tabSize: 50,
+            tabBarHeight: 55,
+            textStyle: const TextStyle(
+              fontSize: 12,
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
             ),
-          );
-        },
-        viewModelBuilder: () => MainScreenViewModel(),
-      ),
+            tabIconColor: ColorConfig.tabIconColor,
+            tabIconSize: 28.0,
+            tabIconSelectedSize: 26.0,
+            tabSelectedColor: ColorConfig.accentColor,
+            tabIconSelectedColor: Colors.white,
+            tabBarColor: Colors.white,
+            onTabItemSelected: (int value) {
+              model.setIndex(value);
+            },
+          ),
+        );
+      },
+      viewModelBuilder: () => MainScreenViewModel(),
     );
   }
 }

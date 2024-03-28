@@ -46,66 +46,69 @@ class ChatView extends StatelessWidget {
         viewModel.makeAllMsgReadLocally();
       },
       builder: (context, model, child) {
-        return SafeArea(
-          child: Scaffold(
-            backgroundColor: Colors.white,
-            body: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.05),
-                    spreadRadius: 5,
-                    blurRadius: 8,
-                    offset: Offset(0, 1), // changes position of shadow
-                  ),
-                ],
-              ),
-              width: 100.horizontal(),
-              // color: const Color(0x60D9D9D9),
-              child: Column(
-                children: [
-                  Container(
-                    color: Color(0xffF2F3F7),
-                    child: Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              model.goToPreviousScreen();
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.only(right: 12),
-                              child: Icon(
-                                Icons.arrow_back_ios,
-                                color: Color(0xff95979D),
-                                size: 18,
+        return Container(
+          color: ColorConfig.backgroundGray,
+          child:  SafeArea(
+            maintainBottomViewPadding: false,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              body: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.05),
+                      spreadRadius: 5,
+                      blurRadius: 8,
+                      offset: Offset(0, 1), // changes position of shadow
+                    ),
+                  ],
+                ),
+                width: 100.horizontal(),
+                child: Column(
+                  children: [
+                    Container(
+                      color: ColorConfig.backgroundGray,
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                model.goToPreviousScreen();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 12),
+                                child: Icon(
+                                  Icons.arrow_back_ios,
+                                  color: ColorConfig.greyColor,
+                                  size: 18,
+                                ),
                               ),
                             ),
-                          ),
-                          CustomCircularImage(
-                            width: 48,
-                            height: 48,
-                            imageUri:
-                                _userDataBasicModel.compressedProfileImage,
-                          ),
-                          const SizedBox(
-                            width: 12,
-                          ),
-                          const AppbarWidget()
-                        ],
+                            CustomCircularImage(
+                              width: 48,
+                              height: 48,
+                              imageUri:
+                              _userDataBasicModel.compressedProfileImage,
+                            ),
+                            const SizedBox(
+                              width: 12,
+                            ),
+                            const AppbarWidget()
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Flexible(
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 10),
-                        child: MsgDisplayWidget(_msgScrollController),
-                      )
-                  ),
-                  MessageSendContainer(),
-                ],
+                    Flexible(
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: MsgDisplayWidget(_msgScrollController),
+                        )
+                    ),
+                    const MessageSendContainer(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -140,10 +143,10 @@ class AppbarWidget extends ViewModelWidget<ChatViewModel> {
             return snapshot.data != ""
                 ? Text(
                     snapshot.data.toString(),
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 13,
                         letterSpacing: 1,
-                        color: Colors.grey,
+                        color: ColorConfig.greyColor2,
                         fontWeight: FontWeight.w400),
                   )
                 : Container(height: 0);
@@ -397,13 +400,12 @@ class MessageSendContainer extends HookViewModelWidget<ChatViewModel> {
             color: Colors.grey.withOpacity(0.15),
             spreadRadius: 5,
             blurRadius: 8,
-            offset: Offset(0, 0), // changes position of shadow
+            offset: const Offset(0, 0), // changes position of shadow
           ),
         ],
       ),
       child: Padding(
-        padding:
-            const EdgeInsets.only(left: 22.0, right: 16, top: 10, bottom: 10),
+        padding: const EdgeInsets.only(left: 22.0, right: 16, top: 10, bottom: 10),
         child: Row(
           children: [
             GestureDetector(
