@@ -58,6 +58,18 @@ dependencies:
   intl_phone_number_input: ^0.7.4
   pin_code_fields: ^8.0.1
 
+  # Firebase authentication
+  firebase_messaging: ^14.7.21
+  firebase_core: ^2.27.2
+  firebase_auth: ^4.18.0
+  # firebase_analytics: ^10.9.0
+  # firebase_crashlytics: ^3.4.20
+  # firebase_dynamic_links: ^5.4.19
+  # firebase_in_app_messaging: ^0.7.4+19
+  # firebase_remote_config: ^4.3.19
+  # firebase_performance: ^0.9.3+19
+  # firebase_storage: ^11.6.11
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
