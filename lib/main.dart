@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:mind_wellness_chat/services/firebase_push_notification_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import 'app/locator.dart';
@@ -29,6 +31,13 @@ void main() {
   }, (error, trace) async {
 
   });
+}
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await showNotification(
+    message.data['title'],
+    message.data['body'],
+    image: message.data['image'],
+  );
 }
 
 class MyApp extends StatelessWidget {

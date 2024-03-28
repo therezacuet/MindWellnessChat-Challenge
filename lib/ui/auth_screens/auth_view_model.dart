@@ -1,9 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../app/locator.dart';
-import '../../app/routes/setup_routes.router.dart';
 import '../../base/custom_base_view_model.dart';
 import '../../base/custom_index_tracking_view_model.dart';
+import '../../const/app_const.dart';
+import '../../models/backup_found_model.dart';
+import '../../models/user/user_basic_data_offline_model.dart';
+import '../../models/user/user_create_model.dart';
+import '../../models/user/user_firebase_token_model.dart';
+import '../../utils/api_utils/api_result/api_result.dart';
+import '../../utils/api_utils/network_exceptions/network_exceptions.dart';
 
 class AuthViewModel extends CustomIndexTrackingViewModel {
   String phoneNumber = "";
@@ -185,10 +191,127 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
   }
 
   phoneNumberVerified() async {
-    signInWithFirebaseAndGoToMainScreen('');
+    String tokenId = await _customBaseViewModel.getFirebasePushNotificationService()
+        .getFcmToken();
+    String? id;
+
+    id = await _customBaseViewModel.getAuthService().getUserid();
+
+    if (id == null) {
+      _customBaseViewModel.stopProgressBar();
+      await _customBaseViewModel.showErrorDialog(
+          description: "Please logout and try again");
+      return;
+    }
+
+    if (isSignUpScreen) {
+      UserCreateModel _userCreateModel = UserCreateModel(
+          name: userName,
+          id: id,
+          firebaseTokenId: tokenId,
+          phoneNumber: phoneNumber,
+          statusLine: AppConst.defaultStatusOfUser);
+
+      ApiResult<bool> result = await _customBaseViewModel
+          .getDataManager()
+          .createUser(_userCreateModel);
+
+      result.when(success: (bool result) async {
+        await signInWithFirebaseAndGoToMainScreen(id!);
+      }, failure: (NetworkExceptions e) async {
+        _customBaseViewModel.stopProgressBar();
+        if(NetworkExceptions.getDioException(e) ==  const NetworkExceptions.conflict()){
+          await _customBaseViewModel.showErrorDialog(
+              description: "User already exist please login");
+        }else{
+          await _customBaseViewModel.showErrorDialog(
+              description: NetworkExceptions.getErrorMessage(e));
+        }
+      });
+    } else {
+      UserFirebaseTokenUpdateModel _userFirebaseTokenUpdateModel =
+      UserFirebaseTokenUpdateModel(id: id, firebaseTokenId: tokenId);
+
+      ApiResult<bool> result = await _customBaseViewModel
+          .getDataManager()
+          .updateFirebaseToken(_userFirebaseTokenUpdateModel);
+      result.when(success: (bool result) async {
+        await signInWithFirebaseAndGoToMainScreen(id!);
+      }, failure: (NetworkExceptions e) async {
+        _customBaseViewModel.stopProgressBar();
+        if (e == const NetworkExceptions.notFound()) {
+          await _customBaseViewModel.showErrorDialog(
+              title: "Account not exist",
+              description: "Please signup instead");
+        } else {
+          await _customBaseViewModel.showErrorDialog(
+              description: NetworkExceptions.getErrorMessage(e));
+        }
+      });
+    }
   }
 
   signInWithFirebaseAndGoToMainScreen(String id) async {
-    print("sign in/ sign up success");
+
+    if (isSignUpScreen) {
+      UserBasicDataOfflineModel _userBasicDataOfflineModel =
+      UserBasicDataOfflineModel(
+          name: userName,
+          statusLine: AppConst.defaultStatusOfUser,
+          profileImage: null,
+          compressedProfileImage: null,
+          id: id);
+      bool resultOfSavingData = await _customBaseViewModel
+          .getDataManager()
+          .saveUserBasicDataOfflineModel(_userBasicDataOfflineModel);
+      _customBaseViewModel.stopProgressBar();
+      if (resultOfSavingData) {
+        //_customBaseViewModel.getNavigationService().clearStackAndShow(Routes.mainScreenView);
+      } else {
+        _customBaseViewModel.showErrorDialog(
+            description: "Some problem occurred in saving data");
+      }
+    } else {
+      ApiResult<UserBasicDataOfflineModel> _userBasicDataOfflineModel =
+      await _customBaseViewModel.getDataManager().getUserData(id);
+
+      _userBasicDataOfflineModel.when(
+        success: (UserBasicDataOfflineModel model) async {
+          bool resultOfSavingData = await _customBaseViewModel
+              .getDataManager()
+              .saveUserBasicDataOfflineModel(model);
+          if (resultOfSavingData) {
+
+            //check for backup
+            String? userId = await _customBaseViewModel.getAuthService().getUserid();
+            ApiResult<BackUpFoundModel> _userBackUpDetails = await _customBaseViewModel.getDataManager().getUserBackupDetail(userId!);
+            _userBackUpDetails.when(success: (BackUpFoundModel model){
+
+              if(model.isBackUpFound){
+                _customBaseViewModel.stopProgressBar();
+                //_customBaseViewModel.getNavigationService().clearStackAndShow(Routes.backUpFoundScreen);
+              }else{
+                _customBaseViewModel.stopProgressBar();
+                //_customBaseViewModel.getNavigationService().clearStackAndShow(Routes.mainScreenView);
+              }
+
+            }, failure: (NetworkExceptions e){
+              _customBaseViewModel.stopProgressBar();
+              _customBaseViewModel.showErrorDialog(description: "Problem occurred in finding backup");
+            });
+
+
+          } else {
+            _customBaseViewModel.showErrorDialog(
+                description: "Some problem occurred in saving data");
+          }
+        },
+        failure: (NetworkExceptions e) {
+          _customBaseViewModel.stopProgressBar();
+          _customBaseViewModel.showErrorDialog(
+              description: NetworkExceptions.getErrorMessage(e));
+        },
+      );
+    }
   }
 }
