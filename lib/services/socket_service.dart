@@ -22,7 +22,6 @@ import '../utils/model_converters.dart';
 class SocketService {
   final DataManager _dataManager = locator<DataManager>();
 
-  // final FirebaseAuthService _firebaseAuthService =FirebaseAuthService();
   late String idOfUser;
   Socket? socket;
   Timer? _timer;
@@ -57,10 +56,8 @@ class SocketService {
 
       if (socket != null) {
         socket!.connect();
-
         socket!.onConnecting((data) => print("socket :-Connecting"));
-        socket!.onConnect(
-          (_) async {
+        socket!.onConnect((_) async {
             print("socket :-Connected");
             listenForIncomingMsg();
             List<MessagesTableData> _notSentMsg =
@@ -121,24 +118,16 @@ class SocketService {
         socket!.onReconnecting((data) => print("socket :- reconnecting"));
         socket!.onReconnectAttempt(
             (data) => print("socket :- onReconnectAttempt"));
-        socket!
-            .onReconnectFailed((data) => print("socket :- onReconnectFailed"));
+        socket!.onReconnectFailed((data) => print("socket :- onReconnectFailed"));
         socket!.onReconnectError((data) => print("socket :- onReconnectError"));
-        socket!
-            .onReconnect((data) => print("socket :- reconnected succesfull"));
+        socket!.onReconnect((data) => print("socket :- reconnected succesfull"));
       }
 
-      // socket.emit("privateMsg", {"content": "Hello"});
+      //socket?.emit("privateMsg", {"content": "Hello"});
     } catch (e) {
       print("socket :- error :- ${e.toString()}");
     }
   }
-
-  // reConnect(){
-  //   if(socket != null){
-  //     socket!.connect();
-  //   }
-  // }
 
   startEmittingUserStatus(String userId, bool status) {
     _timer = Timer.periodic(
@@ -206,10 +195,7 @@ class SocketService {
 
     print("SOCKET EMIT EVENT :- " + "newPrivateMessage");
 
-    socket!.emitWithAck("newPrivateMessage", privateMessageFullModel,
-        ack: ([data]) async {
-      callback();
-    });
+    socket!.emitWithAck("newPrivateMessage", privateMessageFullModel, ack: ([data]) async {callback();});
   }
 
   emitUpdateMsgEvent(Map<String, dynamic> data, Function callback) {

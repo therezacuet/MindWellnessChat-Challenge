@@ -85,13 +85,11 @@ class AllRecentChatDisplayWidget extends ViewModelWidget<RecentChatViewModel> {
                 compressedProfileImage =
                     _recentChatTableData.user_compressed_image;
 
-                List<String> participants =
-                    List.from(_recentChatTableData.participants);
+                List<String> participants = List.from(_recentChatTableData.participants);
 
                 print("participants 0:- " + participants.toString());
 
-                participants
-                    .removeWhere((element) => element == viewModel.userId);
+                participants.removeWhere((element) => element == viewModel.userId);
 
                 print("participants 1 :- " + participants.toString());
 
@@ -102,7 +100,7 @@ class AllRecentChatDisplayWidget extends ViewModelWidget<RecentChatViewModel> {
                         id: participants[0],
                         statusLine: "",
                         compressedProfileImage: compressedProfileImage);
-                    //viewModel.gotoChatScreen(_userDataBasicModel);
+                    viewModel.gotoChatScreen(_userDataBasicModel);
                   },
                   name: name,
                   description: lastMsg,

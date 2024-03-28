@@ -11,6 +11,7 @@ import '../data/prefs/shared_preference_service.dart';
 import '../services/firebase_auth_service.dart';
 import '../services/firebase_push_notification_service.dart';
 import '../services/socket_service.dart';
+import '../ui/chat_screen/chat_view_model.dart';
 import '../ui/main_screen/fragments/search/search_view_model.dart';
 import '../ui/main_screen/main_screen_view_model.dart';
 import '../ui/startup_screens/startup_view_model.dart';
@@ -30,6 +31,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => AuthViewModel());
   locator.registerLazySingleton(() => SearchViewModel());
   locator.registerLazySingleton(() => MainScreenViewModel());
+  locator.registerLazySingleton(() => ChatViewModel());
 
   // firebase
   locator.registerLazySingleton(() => FirebaseAuthService());

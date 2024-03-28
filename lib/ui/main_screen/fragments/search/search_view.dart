@@ -180,7 +180,7 @@ class SearchResultDisplayList extends ViewModelWidget<SearchViewModel> {
                         (context, UserDataBasicModel _userBasicModel, index) {
                       return SingleChatWidget(
                         chatClickCallback: () {
-                          //viewModel.gotoChatScreen(_userBasicModel);
+                          viewModel.gotoChatScreen(_userBasicModel);
                         },
                         name: _userBasicModel.name,
                         description: _userBasicModel.statusLine,
