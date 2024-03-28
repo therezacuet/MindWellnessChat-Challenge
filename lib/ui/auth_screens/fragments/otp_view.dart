@@ -93,7 +93,7 @@ class OtpView extends ViewModelWidget<AuthViewModel> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Didn\'t Recive code?',
+                            'Did not Receive code?',
                             style: h5Title.copyWith(letterSpacing: 1.4),
                           ),
                           TimerWidget(viewModel.otpTimeoutSeconds, () {
@@ -106,6 +106,7 @@ class OtpView extends ViewModelWidget<AuthViewModel> {
                       CustomButton(
                         "VERIFY OTP",
                         buttonPressed: () {
+                          viewModel.submitOtp();
                         },
                       )
                     ],

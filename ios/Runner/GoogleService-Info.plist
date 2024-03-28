@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyA34Qd3bdERssL-SHRg3gv40Kp6dOIZ5EU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1000976521892</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.thoughtfull.mindwellness.chat</string>
+	<key>PROJECT_ID</key>
+	<string>mindwellness-4042c</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mindwellness-4042c.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1000976521892:ios:05560f92d3549f04e7a431</string>
+</dict>
+</plist>

@@ -4,13 +4,18 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../app/locator.dart';
+import '../app/routes/setup_routes.router.dart';
 import '../const/enums/bottom_sheet_enums.dart';
+import '../services/firebase_auth_service.dart';
 
 class CustomBaseViewModel extends BaseViewModel {
+  final FirebaseAuthService _firebaseAuthService = locator<FirebaseAuthService>();
+
   final NavigationService _navigationService = locator<NavigationService>();
   final BottomSheetService _bottomSheetService = locator<BottomSheetService>();
   final DialogService _dialogService = locator<DialogService>();
 
+  FirebaseAuthService getAuthService() => _firebaseAuthService;
 
   NavigationService getNavigationService() => _navigationService;
   BottomSheetService getBottomSheetService() => _bottomSheetService;
@@ -30,6 +35,13 @@ class CustomBaseViewModel extends BaseViewModel {
 
   goToPreviousScreen() {
     getNavigationService().back();
+  }
+
+  logOut({bool shouldRedirectToAuthenticationPage = true}) async {
+    await getAuthService().logOut();
+    if (shouldRedirectToAuthenticationPage) {
+      getNavigationService().clearStackAndShow(Routes.authView);
+    }
   }
 
   showErrorDialog(

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -8,6 +9,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'app/locator.dart';
 import 'app/routes/setup_routes.router.dart';
 import 'config/color_config.dart';
+import 'firebase_options.dart';
 
 void main() {
   runZonedGuarded(() {
@@ -15,6 +17,12 @@ void main() {
     WidgetsFlutterBinding.ensureInitialized();
 
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) async {
+
+      // initialise firebase app
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+
       setupLocator();
       runApp(const MyApp());
     });

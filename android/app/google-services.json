@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1000976521892",
+    "project_id": "mindwellness-4042c",
+    "storage_bucket": "mindwellness-4042c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000976521892:android:23a31009082cff3de7a431",
+        "android_client_info": {
+          "package_name": "com.thoughtfull.mind_wellness_chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbHnRYfE7GA9lELxSxRIxdoyCm8GfnOf8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

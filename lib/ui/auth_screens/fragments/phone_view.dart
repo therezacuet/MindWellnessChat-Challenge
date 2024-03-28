@@ -252,9 +252,8 @@ class BottomSheetWidget extends HookViewModelWidget<AuthViewModel> {
                           } else if (enteredPhoneNumber.length < 10) {
                             viewModel.setErrorText("Enter valid number");
                           } else {
-                            if (isSignUpScreen
-                                ? viewModel.formKey.currentState!.validate()
-                                : true) {
+                            if (isSignUpScreen ? viewModel.formKey.currentState!.validate() : true) {
+                              viewModel.sendOtp();
                             }
                           }
                         },
