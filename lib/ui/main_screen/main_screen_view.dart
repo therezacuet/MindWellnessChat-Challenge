@@ -4,6 +4,7 @@ import 'package:stacked/stacked.dart';
 
 import '../../config/color_config.dart';
 import 'fragments/recent_chat/recent_chat_view.dart';
+import 'fragments/search/search_view.dart';
 import 'main_screen_view_model.dart';
 
 class MainScreenView extends StatelessWidget {
@@ -80,6 +81,8 @@ Widget getViewForIndex(int index,Function gotoSearchScreen) {
       return RecentChatView((){
         gotoSearchScreen();
       });
+    case 1:
+      return const SearchView();
     default:
       return RecentChatView((){
         gotoSearchScreen();

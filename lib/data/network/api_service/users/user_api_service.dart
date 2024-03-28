@@ -43,13 +43,13 @@ class UserApiService implements UserApiHelper{
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
     }
   }
-  //
-  // @override
-  // Future<ApiResult<UserSearchResultList>> searchUsers(UserSearchModel model) async{
-  //     Response _response = await _client.builder().build().get(EndPoints.searchUser,queryParameters:model.toJson());
-  //     UserSearchResultList _userSearchResultList = UserSearchResultList.fromJson(_response.data);
-  //     return ApiResult.success(data: _userSearchResultList);
-  // }
+
+  @override
+  Future<ApiResult<UserSearchResultList>> searchUsers(UserSearchModel model) async{
+      Response _response = await _client.builder().build().get(EndPoints.searchUser,queryParameters:model.toJson());
+      UserSearchResultList _userSearchResultList = UserSearchResultList.fromJson(_response.data);
+      return ApiResult.success(data: _userSearchResultList);
+  }
 
   @override
   Future<ApiResult<bool>> updateNameStatusUser(UserNameStatusUpdateModel userNameStatusUpdateModel) async{

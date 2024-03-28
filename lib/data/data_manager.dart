@@ -16,6 +16,8 @@ import '../models/user/user_basic_data_offline_model.dart';
 import '../models/user/user_firebase_token_model.dart';
 import '../models/user/user_image_model.dart';
 import '../models/user/user_name_status_update_model.dart';
+import '../models/user/user_search_model.dart';
+import '../models/user/user_search_result_list.dart';
 import '../utils/api_utils/api_result/api_result.dart';
 import 'data_manager_helper.dart';
 import 'local/app_database.dart';
@@ -40,10 +42,10 @@ class DataManager implements DataManagerHelper {
     return _userApiServices.updateFirebaseToken(userFirebaseTokenUpdateModel);
   }
 
-  // @override
-  // Future<ApiResult<UserSearchResultList>> searchUsers(UserSearchModel model) {
-  //   return _userApiServices.searchUsers(model);
-  // }
+  @override
+  Future<ApiResult<UserSearchResultList>> searchUsers(UserSearchModel model) {
+    return _userApiServices.searchUsers(model);
+  }
 
   @override
   Future insertNewMessage(MessagesTableCompanion message) {

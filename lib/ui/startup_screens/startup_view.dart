@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../app/routes/style_config.dart';
+import '../../config/size_config.dart';
 import 'startup_view_model.dart';
 
 class StartUpView extends StatelessWidget {
@@ -12,6 +13,7 @@ class StartUpView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<StartUpViewModel>.reactive(
       onViewModelReady: (StartUpViewModel model) {
+        SizeConfig().init(context);
         model.runStartupLogic();
       },
       viewModelBuilder: () => StartUpViewModel(),
