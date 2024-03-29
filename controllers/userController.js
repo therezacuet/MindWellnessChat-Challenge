@@ -279,3 +279,19 @@ exports.getUserBackUpData = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.getUserConnectionStatus = async (req, res, next) => {
+    try {
+        console.log("REq 0 :- " + req.query.id);
+        const id = req.query.id;
+        if (!id) {
+            throw errorResponse.idNotFoundError();
+        }
+        console.log("REq 1 :- " + id);
+        const userInformation = await userModel.findById(id);
+        res.dataFetchSuccess({ data: userInformation.isOnline });
+    } catch (error) {
+        console.log("ERROR isONLINE:- " + error);
+        next(error);
+    }
+};
