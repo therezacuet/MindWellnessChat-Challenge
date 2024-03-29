@@ -13,12 +13,15 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 const server = require("http").createServer(app);
 
-
+// Config logger middleware
+app.use(morgan("dev"));
+app.use(express.urlencoded());
+app.use(express.json());
+app.use(morgan("combined"));
 
 app.use((req, res) => {
     res.serverError();
 });
-
 
 // Import the database connection
 database.connectToDb(() => {
