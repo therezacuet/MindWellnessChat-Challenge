@@ -1,4 +1,4 @@
-import util from "util";
+import util from "node:util";
 import recentChatModel from "../models/recentChat";
 import userModel from "../models/user";
 import errorResponse from "../handlers/errors/errorResponse";

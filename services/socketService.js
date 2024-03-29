@@ -1,8 +1,8 @@
-import util from "util";
-import msgStatus from "../constants/messageStatus";
-import messageController from "../controllers/messageController";
-import PrivateMessageModel from "../models/privateMessage";
-import isUserOne from "../utils/appUtils";
+import util from "node:util";
+const msgStatus = require("../constants/messageStatus");
+const messageController = require("../controllers/messageController");
+const PrivateMessageModel = require("../models/privateMessage");
+const isUserOne = require("../utils/appUtils");
 
 let io;
 let socketConnection;
@@ -16,7 +16,6 @@ const socketConnected = (userId) => {
         userId: userId,
         isOnline: true,
     };
-
     socketConnection.broadcast.emit(
         userId + "_status",
         connectionStatusChangeData.isOnline
