@@ -15,19 +15,18 @@ class SearchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late PagingController<int, UserDataBasicModel> _pagingController;
-
+    late PagingController<int, UserDataBasicModel> pagingController;
     return Scaffold(
       body: ViewModelBuilder<SearchViewModel>.nonReactive(
         disposeViewModel: false,
         onViewModelReady: (SearchViewModel viewModel) {
-          _pagingController = viewModel.getPagingController();
+          pagingController = viewModel.getPagingController();
         },
         builder: (context, model, child) {
           TextEditingController searchController =
-              TextEditingController(text: model.textForSearch);
+          TextEditingController(text: model.textForSearch);
           searchController.addListener(
-            () {
+                () {
               String inputText = searchController.text;
               model.textChange(inputText);
             },
@@ -41,7 +40,7 @@ class SearchView extends StatelessWidget {
                 width: 100.horizontal(),
                 color: ColorConfig.accentColor,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 24, top: 22, right: 18),
+                  padding: const EdgeInsets.only(left: 24, top: 32, right: 18),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -92,7 +91,7 @@ class SearchView extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              Flexible(child: SearchResultDisplayList(_pagingController))
+              Flexible(child: SearchResultDisplayList(pagingController))
             ],
           );
         },

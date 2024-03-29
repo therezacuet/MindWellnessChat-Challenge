@@ -28,9 +28,7 @@ class MainScreenViewModel extends CustomIndexTrackingViewModel {
       );
     } else {
       _baseViewModel.getNavigationService().clearStackAndShow(Routes.authView);
-      _baseViewModel.showErrorDialog(
-          description:
-              "You logged out from app due to unexpected problem please login again");
+      _baseViewModel.showErrorDialog(description: "You logged out from app due to unexpected problem please login again");
     }
   }
 

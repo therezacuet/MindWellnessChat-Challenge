@@ -21,13 +21,13 @@ class MainScreenView extends StatelessWidget {
       builder: (context, model, child) {
         return Scaffold(
           body: getViewForIndex(model.currentIndex,(){
-            model.setIndex(1);
+            model.setIndex(0);
           }),
           bottomNavigationBar: MotionTabBar(
             initialSelectedTab: AppConst.menuItemChat,
             useSafeArea: true,
-            labels: const [AppConst.menuItemChat, AppConst.menuItemSearch, AppConst.menuItemProfile],
-            icons: const [Icons.chat, Icons.search, Icons.account_circle_outlined],
+            labels: const [AppConst.menuItemSearch, AppConst.menuItemChat, AppConst.menuItemProfile],
+            icons: const [Icons.search, Icons.chat, Icons.account_circle_outlined],
             tabSize: 50,
             tabBarHeight: 55,
             textStyle: const TextStyle(
@@ -55,11 +55,11 @@ class MainScreenView extends StatelessWidget {
 Widget getViewForIndex(int index,Function gotoSearchScreen) {
   switch (index) {
     case 0:
+      return const SearchView();
+    case 1:
       return RecentChatView((){
         gotoSearchScreen();
       });
-    case 1:
-      return const SearchView();
     case 2:
       return const ProfileView();
     default:

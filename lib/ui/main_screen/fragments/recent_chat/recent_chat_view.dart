@@ -5,10 +5,10 @@ import 'package:mind_wellness_chat/ui/main_screen/fragments/recent_chat/widgets/
 import 'package:stacked/stacked.dart';
 
 import '../../../../config/color_config.dart';
+import '../../../../const/app_const.dart';
 import '../../../../data/local/app_database.dart';
 import '../../../../models/user/user_basic_data_model.dart';
 import '../../../../utils/date_time_util.dart';
-import '../../../widgets/search_appbar_widget.dart';
 import '../../../widgets/single_chat_widget.dart';
 
 class RecentChatView extends StatelessWidget {
@@ -28,13 +28,11 @@ class RecentChatView extends StatelessWidget {
           backgroundColor: Colors.white,
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(56.0),
-            child: SearchAppBarWidget(
-              onChange: (String val) {
-                // TODO: Add your logic to from search recent chat
-              },
-              onDone: (String val) {},
-              onClose: () {},
-              onCleared: () {},
+            child: AppBar(
+                elevation: 0,
+                backgroundColor: ColorConfig.accentColor,
+                title: Text(AppConst.appName, style: TextStyle(color: ColorConfig.primaryColor, fontSize: 16, letterSpacing: 0.8, fontWeight: FontWeight.w600),),
+                actions: []
             ),
           ),
           body: Padding(

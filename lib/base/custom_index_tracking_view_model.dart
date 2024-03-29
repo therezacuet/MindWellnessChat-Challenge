@@ -2,7 +2,7 @@ import 'custom_base_view_model.dart';
 
 class CustomIndexTrackingViewModel extends CustomBaseViewModel {
 
-  int _currentIndex = 0;
+  int _currentIndex = 1;
   bool _reverse = false;
 
   int get currentIndex => _currentIndex;
