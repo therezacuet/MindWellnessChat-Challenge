@@ -132,9 +132,7 @@ exports.updateUserToken = async (req, res, next) => {
 
 exports.updateUser = async (req, res, next) => {
     try {
-        const _id = req.userId;
-        delete req.body["_id"];
-
+        const _id = req.body._id;
         let nameOfUser = req.body.name;
         let compressedImageOfUser = req.body.compressed_profile_image;
 
