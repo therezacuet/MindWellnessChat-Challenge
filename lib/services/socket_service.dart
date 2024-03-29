@@ -311,9 +311,9 @@ class SocketService {
           Map<String, dynamic> incomingJsonData = data;
           incomingJsonData.putIfAbsent("is_sent", () => true);
 
-          UpdateMessageModel _updateMessageModel = UpdateMessageModel.fromJson(incomingJsonData);
-          IdModel idModel = IdModel(id: _updateMessageModel.id);
-          await _dataManager.updateExitingMsg(_updateMessageModel);
+          UpdateMessageModel updateMessageModel = UpdateMessageModel.fromJson(incomingJsonData);
+          IdModel idModel = IdModel(id: updateMessageModel.id);
+          await _dataManager.updateExitingMsg(updateMessageModel);
           await _dataManager.msgUpdatedLocallyForSender(idModel);
         } catch (e) {
           print("HELLO :-  " + e.toString());
@@ -325,15 +325,10 @@ class SocketService {
       print("SOCKET EVENT :- " + "newRecentChat :-  " + data.toString());
       try {
         RecentChatServerModel _recentChatServerModel = RecentChatServerModel.fromJson(data);
-
-        // String? userId = idOfUser ;//?? await (_firebaseAuthService.getUserid());
-
         bool isUser1 = false;
-        List<String> participantList =
-            List.from(_recentChatServerModel.participants);
+        List<String> participantList = List.from(_recentChatServerModel.participants);
         participantList.sort();
-        int indexOfCurrentUser =
-            participantList.indexWhere((element) => element == idOfUser);
+        int indexOfCurrentUser = participantList.indexWhere((element) => element == idOfUser);
         if (indexOfCurrentUser == 0) {
           isUser1 = true;
         }
@@ -347,33 +342,28 @@ class SocketService {
               ? _recentChatServerModel.user2CompressedImage
               : _recentChatServerModel.user1CompressedImage,
           participants: participantList,
-          // unreadMsg: _recentChatServerModel,
-          // lastMsg: inputText,
-          // lastMsgTime: currentTime,
-          // shouldUpdate: false
         );
 
-        List<RecentChatTableData> _recentChatTableData =
-            await _dataManager.getRecentChatTableDataFromUserIds(recentChatLocalModel.participants);
+        List<RecentChatTableData> recentChatTableData = await _dataManager.getRecentChatTableDataFromUserIds(recentChatLocalModel.participants);
 
-        print("_recentChatLocalModel :- " + recentChatLocalModel.toJson().toString());
+        print("_recentChatLocalModel :- ${recentChatLocalModel.toJson()}");
 
-        if (_recentChatTableData.isEmpty) {
+        if (recentChatTableData.isEmpty) {
           await _dataManager.insertNewRecentChat(recentChatLocalModel);
         } else {
-          int totalMsgCount = (_recentChatTableData[0].unread_msg ?? 0); // +
-          RecentChatTableCompanion _recentChatTableCompanion =
+          int totalMsgCount = (recentChatTableData[0].unread_msg ?? 0); // +
+          RecentChatTableCompanion recentChatTableCompanion =
               RecentChatTableCompanion(
-                  id: Value(_recentChatTableData[0].id),
+                  id: Value(recentChatTableData[0].id),
                   unread_msg: Value(totalMsgCount),
                   user_name: Value(recentChatLocalModel.userName),
                   user_compressed_image: Value(recentChatLocalModel.userCompressedImage),
-                  last_msg_time: Value(_recentChatTableData[0].last_msg_time),
-                  last_msg_text: Value(_recentChatTableData[0].last_msg_text));
-          await _dataManager.updateRecentChatTableData(_recentChatTableCompanion);
+                  last_msg_time: Value(recentChatTableData[0].last_msg_time),
+                  last_msg_text: Value(recentChatTableData[0].last_msg_text));
+          await _dataManager.updateRecentChatTableData(recentChatTableCompanion);
         }
 
-        Map<String, Object> _updateObject = {};
+        Map<String, Object> updateObject = {};
         String keyOfUserLocalUpdate = "";
         if (isUser1) {
           keyOfUserLocalUpdate = "user1_local_updated";
@@ -381,10 +371,10 @@ class SocketService {
           keyOfUserLocalUpdate = "user2_local_updated";
         }
 
-        _updateObject.putIfAbsent("_id", () => recentChatLocalModel.id);
-        _updateObject.putIfAbsent(keyOfUserLocalUpdate, () => true);
+        updateObject.putIfAbsent("_id", () => recentChatLocalModel.id);
+        updateObject.putIfAbsent(keyOfUserLocalUpdate, () => true);
 
-        await _dataManager.updateRecentChat(_updateObject);
+        await _dataManager.updateRecentChat(updateObject);
       } catch (e) {}
     });
   }

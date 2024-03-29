@@ -23,12 +23,11 @@ class SearchViewModel extends CustomBaseViewModel {
   }
 
   getPagingController(){
-
     if(_pagingController != null){
       return _pagingController;
     }else{
-      PagingController<int, UserDataBasicModel> _tempPagingController =  PagingController<int, UserDataBasicModel>(firstPageKey: 0);
-      return _tempPagingController;
+      PagingController<int, UserDataBasicModel> tempPagingController =  PagingController<int, UserDataBasicModel>(firstPageKey: 0);
+      return tempPagingController;
     }
   }
 

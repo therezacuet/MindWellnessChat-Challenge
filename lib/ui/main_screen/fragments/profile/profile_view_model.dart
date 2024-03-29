@@ -49,6 +49,7 @@ class ProfileViewModel extends CustomBaseViewModel {
         showProgressBar();
         await getSocketService().disconnectFromSocket();
         await getAuthService().logOut();
+        await getAppDatabase().deleteAllTables();
         bool result = await getDataManager().clearSharedPreference();
         if(result){
           stopProgressBar();

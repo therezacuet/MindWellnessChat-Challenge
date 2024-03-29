@@ -251,11 +251,8 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
   }
 
   signInWithFirebaseAndGoToMainScreen(String id) async {
-
-    print("signInWithFirebaseAndGoToMainScreen");
-
     if (isSignUpScreen) {
-      UserBasicDataOfflineModel _userBasicDataOfflineModel =
+      UserBasicDataOfflineModel userBasicDataOfflineModel =
       UserBasicDataOfflineModel(
           name: userName,
           statusLine: AppConst.defaultStatusOfUser,
@@ -264,7 +261,7 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
           id: id);
       bool resultOfSavingData = await _customBaseViewModel
           .getDataManager()
-          .saveUserBasicDataOfflineModel(_userBasicDataOfflineModel);
+          .saveUserBasicDataOfflineModel(userBasicDataOfflineModel);
       _customBaseViewModel.stopProgressBar();
       if (resultOfSavingData) {
         _customBaseViewModel.getNavigationService().clearStackAndShow(Routes.mainScreenView);
@@ -273,10 +270,10 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
             description: "Some problem occurred in saving data");
       }
     } else {
-      ApiResult<UserBasicDataOfflineModel> _userBasicDataOfflineModel =
+      ApiResult<UserBasicDataOfflineModel> userBasicDataOfflineModel0 =
       await _customBaseViewModel.getDataManager().getUserData(id);
 
-      _userBasicDataOfflineModel.when(
+      userBasicDataOfflineModel0.when(
         success: (UserBasicDataOfflineModel model) async {
           bool resultOfSavingData = await _customBaseViewModel
               .getDataManager()
@@ -285,8 +282,8 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
 
             //check for backup
             String? userId = await _customBaseViewModel.getAuthService().getUserid();
-            ApiResult<BackUpFoundModel> _userBackUpDetails = await _customBaseViewModel.getDataManager().getUserBackupDetail(userId!);
-            _userBackUpDetails.when(success: (BackUpFoundModel model){
+            ApiResult<BackUpFoundModel> userBackUpDetails = await _customBaseViewModel.getDataManager().getUserBackupDetail(userId!);
+            userBackUpDetails.when(success: (BackUpFoundModel model){
 
               if(model.isBackUpFound){
                 _customBaseViewModel.stopProgressBar();

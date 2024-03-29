@@ -67,12 +67,12 @@ class BottomSheetWidget extends HookViewModelWidget<AuthViewModel> {
 
   @override
   Widget buildViewModelWidget(BuildContext context, AuthViewModel viewModel) {
-    var _userNameTextController =
+    var userNameTextController =
         useTextEditingController(text: viewModel.userName);
-    var _phoneNumberController = useTextEditingController();
-    _userNameTextController.addListener(
+    var phoneNumberController = useTextEditingController();
+    userNameTextController.addListener(
       () {
-        String inputText = _userNameTextController.text;
+        String inputText = userNameTextController.text;
         viewModel.setUserName(inputText);
       },
     );
@@ -143,7 +143,7 @@ class BottomSheetWidget extends HookViewModelWidget<AuthViewModel> {
                                       child: Form(
                                         key: viewModel.formKey,
                                         child: TextFormField(
-                                          controller: _userNameTextController,
+                                          controller: userNameTextController,
                                           validator: (text) {
                                             if (text == null ||
                                                 text.length < 2) {
@@ -170,16 +170,16 @@ class BottomSheetWidget extends HookViewModelWidget<AuthViewModel> {
                                 : Container(),
                           ),
                           InternationalPhoneNumberInput(
-                              textFieldController: _phoneNumberController,
+                              textFieldController: phoneNumberController,
                               textStyle: const TextStyle(
                                 fontSize: 14,
                               ),
                               validator: (value) {},
                               onInputChanged: (number) {
-                                _phoneNumberController.selection =
+                                phoneNumberController.selection =
                                     TextSelection.collapsed(
                                         offset:
-                                            _phoneNumberController.text.length);
+                                            phoneNumberController.text.length);
                                 if (number.phoneNumber != null) {
                                   viewModel.setPhoneNumber(number.phoneNumber!);
                                 }

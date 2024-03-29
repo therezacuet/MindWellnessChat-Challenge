@@ -23,10 +23,8 @@ class SearchView extends StatelessWidget {
           pagingController = viewModel.getPagingController();
         },
         builder: (context, model, child) {
-          TextEditingController searchController =
-          TextEditingController(text: model.textForSearch);
-          searchController.addListener(
-                () {
+          TextEditingController searchController = TextEditingController(text: model.textForSearch);
+          searchController.addListener(() {
               String inputText = searchController.text;
               model.textChange(inputText);
             },
@@ -40,7 +38,7 @@ class SearchView extends StatelessWidget {
                 width: 100.horizontal(),
                 color: ColorConfig.accentColor,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 24, top: 32, right: 18),
+                  padding: const EdgeInsets.only(left: 24, top: 48, right: 18),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,

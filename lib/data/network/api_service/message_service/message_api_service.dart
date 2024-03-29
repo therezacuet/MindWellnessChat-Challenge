@@ -74,10 +74,8 @@ class MessageApiService implements MessageApiHelper {
   @override
   Future<ApiResult<bool>> msgUpdatedLocallyForSender(IdModel idModel) async{
     Client tempClient = await _client.builder().setProtectedApiHeader();
-
     try {
       await tempClient
-      // .setUrlEncoded()
           .build()
           .patch(EndPoints.msgUpdatedLocallyForSender,data: idModel);
       return const ApiResult.success(data: true);
