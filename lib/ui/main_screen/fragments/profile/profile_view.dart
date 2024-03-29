@@ -87,7 +87,7 @@ class ProfileView extends StatelessWidget {
                                 right: -25,
                                 child: RawMaterialButton(
                                   onPressed: () {
-                                    //model.changeProfilePicture();
+                                    model.changeProfilePicture();
                                   },
                                   elevation: 2.0,
                                   fillColor: const Color(0xff455E6C),

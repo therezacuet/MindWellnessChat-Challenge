@@ -28,24 +28,24 @@ class ProfileViewModel extends CustomBaseViewModel {
   String? profileImage;
 
   getUserData() async {
-    UserBasicDataOfflineModel? _userBasicDataOfflineModel =
+    UserBasicDataOfflineModel? userBasicDataOfflineModel =
         await getDataManager().getUserBasicDataOfflineModel();
-    if (_userBasicDataOfflineModel != null) {
-      userName = _userBasicDataOfflineModel.name;
-      userStatus = _userBasicDataOfflineModel.statusLine;
-      profileImage = _userBasicDataOfflineModel.profileImage;
+    if (userBasicDataOfflineModel != null) {
+      userName = userBasicDataOfflineModel.name;
+      userStatus = userBasicDataOfflineModel.statusLine;
+      profileImage = userBasicDataOfflineModel.profileImage;
       notifyListeners();
     }
   }
 
   logoutUser() async {
-    DialogResponse? _dialogResponse = await getDialogService().showCustomDialog(
+    DialogResponse? dialogResponse = await getDialogService().showCustomDialog(
         title: AppConst.logoutDialogTitle,
         description:AppConst.logoutDialogMsg,
         variant: DialogEnum.confirmation);
 
-    if (_dialogResponse != null) {
-      if (_dialogResponse.confirmed) {
+    if (dialogResponse != null) {
+      if (dialogResponse.confirmed) {
         showProgressBar();
         await getSocketService().disconnectFromSocket();
         await getAuthService().logOut();
@@ -61,8 +61,8 @@ class ProfileViewModel extends CustomBaseViewModel {
 
   changeProfilePicture() async {
     File imageFile;
-    final ImagePicker _picker = ImagePicker();
-    XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       showProgressBar();
       imageFile = File(pickedFile.path);
@@ -70,7 +70,8 @@ class ProfileViewModel extends CustomBaseViewModel {
       CroppedFile? croppedImage = await ImageCropper().cropImage(
           sourcePath: imageFile.path,
           aspectRatio: const CropAspectRatio(ratioX: 4, ratioY: 5),
-          cropStyle: CropStyle.circle);
+          cropStyle: CropStyle.circle
+      );
 
       if (croppedImage != null) {
         final dir = await getTemporaryDirectory();
@@ -119,8 +120,8 @@ class ProfileViewModel extends CustomBaseViewModel {
     }
   }
 
-  Future<List<String>> uploadFiles(List<File> _images) async {
-    print("image uploading :- ${_images.length}");
+  Future<List<String>> uploadFiles(List<File> images) async {
+    print("image uploading :- ${images.length}");
 
     List<String> downloadedUrlList = [];
 
@@ -129,25 +130,25 @@ class ProfileViewModel extends CustomBaseViewModel {
     Reference profilePictureRef = storage.ref().child(
         AppConst.profilePictureStoragePath +
             DateTime.now().millisecondsSinceEpoch.toString() +
-            basename(_images[0].path));
+            basename(images[0].path));
 
     Reference compressedProfilePictureRef = storage.ref().child(
         AppConst.compressedProfilePictureStoragePath +
             DateTime.now().millisecondsSinceEpoch.toString() +
-            basename(_images[1].path));
+            basename(images[1].path));
 
     UploadTask uploadTask;
 
     try {
       for (int i = 0; i < 2; i++) {
         if (i == 0) {
-          uploadTask = profilePictureRef.putFile(_images[0]);
+          uploadTask = profilePictureRef.putFile(images[0]);
           await uploadTask.whenComplete(() async {
             String downloadUrl = await profilePictureRef.getDownloadURL();
             downloadedUrlList.add(downloadUrl);
           });
         } else {
-          uploadTask = compressedProfilePictureRef.putFile(_images[1]);
+          uploadTask = compressedProfilePictureRef.putFile(images[1]);
           await uploadTask.whenComplete(() async {
             String downloadUrl =
                 await compressedProfilePictureRef.getDownloadURL();
@@ -176,14 +177,14 @@ class ProfileViewModel extends CustomBaseViewModel {
   }
 
   openEditProfileBottomSheet() async {
-    UserBasicDataOfflineModel? _userBasicDataOfflineModel = await getSharedPreferenceService().getUserBasicDataOfflineModel();
+    UserBasicDataOfflineModel? userBasicDataOfflineModel = await getSharedPreferenceService().getUserBasicDataOfflineModel();
 
     Map<String, dynamic> dialogData = {};
 
-    if (_userBasicDataOfflineModel != null) {
-      dialogData.putIfAbsent("name", () => _userBasicDataOfflineModel.name);
+    if (userBasicDataOfflineModel != null) {
+      dialogData.putIfAbsent("name", () => userBasicDataOfflineModel.name);
       dialogData.putIfAbsent(
-          "status", () => _userBasicDataOfflineModel.statusLine);
+          "status", () => userBasicDataOfflineModel.statusLine);
     } else {
       dialogData.putIfAbsent("name", () => "");
       dialogData.putIfAbsent("status", () => "");
@@ -191,40 +192,40 @@ class ProfileViewModel extends CustomBaseViewModel {
 
     dialogData.putIfAbsent("form_key", () => formKeyForEditProfile);
 
-    SheetResponse? _sheetResponse = await getBottomSheetService()
+    SheetResponse? sheetResponse = await getBottomSheetService()
         .showCustomSheet(
             data: dialogData,
             variant: BottomSheetEnum.editProfile,
             barrierDismissible: true);
 
-    if (_sheetResponse != null && _sheetResponse.data != null) {
-      print("_sheetResponse :- " + _sheetResponse.data.toString());
+    if (sheetResponse != null && sheetResponse.data != null) {
+      print("_sheetResponse :- " + sheetResponse.data.toString());
 
-      String name = _sheetResponse.data['name'];
-      String status = _sheetResponse.data['status'];
+      String name = sheetResponse.data['name'];
+      String status = sheetResponse.data['status'];
 
-      UserNameStatusUpdateModel _userNameStatusUpdateModel =
+      UserNameStatusUpdateModel userNameStatusUpdateModel =
           UserNameStatusUpdateModel(statusLine: status, name: name);
 
       showProgressBar();
-      ApiResult<bool> _nameStatusUpdateResult = await getDataManager()
-          .updateNameStatusUser(_userNameStatusUpdateModel);
+      ApiResult<bool> nameStatusUpdateResult = await getDataManager()
+          .updateNameStatusUser(userNameStatusUpdateModel);
 
-      _nameStatusUpdateResult.when(success: (bool result) async {
+      nameStatusUpdateResult.when(success: (bool result) async {
         stopProgressBar();
 
-        UserBasicDataOfflineModel? _userBasicDataOfflineModel =
+        UserBasicDataOfflineModel? userBasicDataOfflineModel0 =
             await getDataManager().getUserBasicDataOfflineModel();
-        if (_userBasicDataOfflineModel != null) {
-          _userBasicDataOfflineModel.name = name;
-          _userBasicDataOfflineModel.statusLine = status;
+        if (userBasicDataOfflineModel0 != null) {
+          userBasicDataOfflineModel0.name = name;
+          userBasicDataOfflineModel0.statusLine = status;
 
           await getDataManager()
-              .saveUserBasicDataOfflineModel(_userBasicDataOfflineModel);
+              .saveUserBasicDataOfflineModel(userBasicDataOfflineModel0);
           getDialogService().showCustomDialog(variant: DialogEnum.success);
 
-          userName = _userNameStatusUpdateModel.name;
-          userStatus = _userNameStatusUpdateModel.statusLine;
+          userName = userNameStatusUpdateModel.name;
+          userStatus = userNameStatusUpdateModel.statusLine;
           notifyListeners();
         } else {
           showErrorDialog();
