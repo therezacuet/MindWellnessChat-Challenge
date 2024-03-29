@@ -67,4 +67,4 @@ node_modules/
 # dotenv environment variables file
 config.env
 
-serviceAccount.json
+./serviceAccountKey.json

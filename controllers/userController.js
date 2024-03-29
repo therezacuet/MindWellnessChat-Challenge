@@ -1,7 +1,7 @@
 import util from "node:util";
 import recentChatModel from "../models/recentChat";
 import userModel from "../models/user";
-import errorResponse from "../handlers/errors/errorResponse";
+import errorResponse from "../helpers/errors/errorResponse";
 
 exports.addUser = async (req, res, next) => {
     try {

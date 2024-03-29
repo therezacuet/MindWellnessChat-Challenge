@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const errorResponse = require("../handlers/errors/errorResponse");
+const errorResponse = require("../helpers/errors/errorResponse");
 async function decodeIDToken(req, res, next) {
     console.log(req.headers);
     const header = req.headers?.authorization;
