@@ -2,7 +2,7 @@ import { connect } from 'mongoose';
 
 const dbUri = process.env.MONGO_DB_URL;
 
-export async function connectToDb(success,failure) {
+export default async function connectToDb(success,failure) {
     connect(dbUri, {
         useNewUrlParser: true,
         useUnifiedTopology: true

@@ -2,7 +2,13 @@ import express from "express";
 import morgan from "morgan";
 import { config } from "dotenv";
 import database from "./configs/dbConnection";
-import process from "process";
+import process from "node:process";
+import initializeFirebase from "./configs/firebaseInit";
+import userRoutes from "routers/user";
+import messageRoutes from "routers/message";
+import {makeSocketConnection} from "./services/socketService";
+import customResponses from "helpers/customResponses";
+import decodeIDToken from "middlewares/tokenVerification";
 
 config({path: "config.env"});
 
@@ -19,9 +25,20 @@ app.use(express.urlencoded());
 app.use(express.json());
 app.use(morgan("combined"));
 
+// Define the routes
+app.use("/users", userRoutes);
+app.use("/messages", messageRoutes);
+
+// Custom response middleware
+app.use(customResponses);
+app.use(decodeIDToken);
+
 app.use((req, res) => {
     res.serverError();
 });
+
+// Initialize the firebase
+initializeFirebase();
 
 // Import the database connection
 database.connectToDb(() => {

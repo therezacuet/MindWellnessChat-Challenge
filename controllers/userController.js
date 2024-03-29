@@ -108,7 +108,6 @@ exports.getSingleUser = async (req, res, next) => {
         if (!_id) {
             throw errorResponse.idNotFoundError();
         }
-
         const userInformation = await userModel.findById(_id);
         console.log(userInformation);
         res.dataFetchSuccess({ data: userInformation });
