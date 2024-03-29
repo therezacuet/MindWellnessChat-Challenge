@@ -7,11 +7,10 @@ exports.addUser = async (req, res, next) => {
     try {
         const _id = req.body._id;
         const doesUserExit = await userModel.exists({ _id: _id });
-        if (doesUserExit) {
-            throw errorResponse.Api409Error({});
+        if (!doesUserExit) {
+            await userModel.create(req.body);
         }
-        await userModel.create(req.body);
-        res.dataUpdateSuccess({ message: "User Created Successfully" });
+        res.dataUpdateSuccess({message: "User Created Successfully"});
     } catch (error) {
         next(error);
     }
@@ -241,6 +240,7 @@ exports.updateUser = async (req, res, next) => {
         console.log("LOL :- "  +util.inspect(results));
         res.dataUpdateSuccess();
     } catch (error) {
+        console.log("error :- " + error);
         next(error);
     }
 };

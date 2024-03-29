@@ -25,20 +25,21 @@ app.use(express.urlencoded());
 app.use(express.json());
 app.use(morgan("combined"));
 
+// Initialize the firebase
+initializeFirebase();
+
+// Custom response middleware
+app.use(customResponses);
+
 // Define the routes
 app.use("/users", userRoutes);
 app.use("/messages", messageRoutes);
 
-// Custom response middleware
-app.use(customResponses);
 app.use(decodeIDToken);
 
 app.use((req, res) => {
     res.serverError();
 });
-
-// Initialize the firebase
-initializeFirebase();
 
 // database connection
 database.connectToDb(() => {
