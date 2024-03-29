@@ -46,18 +46,17 @@ class UserApiService implements UserApiHelper{
 
   @override
   Future<ApiResult<UserSearchResultList>> searchUsers(UserSearchModel model) async{
-      Response _response = await _client.builder().build().get(EndPoints.searchUser,queryParameters:model.toJson());
-      UserSearchResultList _userSearchResultList = UserSearchResultList.fromJson(_response.data);
-      return ApiResult.success(data: _userSearchResultList);
+      Response response = await _client.builder().build().get(EndPoints.searchUser,queryParameters:model.toJson());
+      UserSearchResultList userSearchResultList = UserSearchResultList.fromJson(response.data);
+      return ApiResult.success(data: userSearchResultList);
   }
 
   @override
   Future<ApiResult<bool>> updateNameStatusUser(UserNameStatusUpdateModel userNameStatusUpdateModel) async{
     try {
-
-     Client _tempClient = await _client.builder().setProtectedApiHeader();
-
-      await _tempClient.build().patch(EndPoints.updateUser,data: userNameStatusUpdateModel.toJson());
+      Client tempClient = await _client.builder().setProtectedApiHeader();
+      print(userNameStatusUpdateModel.toJson());
+      await tempClient.build().patch(EndPoints.updateUser,data: userNameStatusUpdateModel.toJson());
       return const ApiResult.success(data: true);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
@@ -82,10 +81,11 @@ class UserApiService implements UserApiHelper{
   }
 
   @override
-  Future<ApiResult<bool>> updateImageOfUser(UserImageModel _userImageModel) async{
+  Future<ApiResult<bool>> updateImageOfUser(UserImageModel userImageModel) async{
     try {
-      Client _tempClient = await _client.builder().setProtectedApiHeader();
-      await _tempClient.build().patch(EndPoints.updateUser,data: _userImageModel.toJson());
+      Client tempClient = await _client.builder().setProtectedApiHeader();
+      print(userImageModel.toJson());
+      await tempClient.build().patch(EndPoints.updateUser,data: userImageModel.toJson());
       return const ApiResult.success(data: true);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));

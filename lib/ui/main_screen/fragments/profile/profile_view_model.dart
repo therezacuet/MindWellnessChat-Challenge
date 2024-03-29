@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -23,14 +24,15 @@ import '../../../../utils/api_utils/network_exceptions/network_exceptions.dart';
 
 class ProfileViewModel extends CustomBaseViewModel {
   var formKeyForEditProfile = GlobalKey<FormState>();
+  String userId = "";
   String userName = "";
   String userStatus = "";
   String? profileImage;
 
   getUserData() async {
-    UserBasicDataOfflineModel? userBasicDataOfflineModel =
-        await getDataManager().getUserBasicDataOfflineModel();
+    UserBasicDataOfflineModel? userBasicDataOfflineModel = await getDataManager().getUserBasicDataOfflineModel();
     if (userBasicDataOfflineModel != null) {
+      userId = userBasicDataOfflineModel.id;
       userName = userBasicDataOfflineModel.name;
       userStatus = userBasicDataOfflineModel.statusLine;
       profileImage = userBasicDataOfflineModel.profileImage;
@@ -70,39 +72,35 @@ class ProfileViewModel extends CustomBaseViewModel {
       CroppedFile? croppedImage = await ImageCropper().cropImage(
           sourcePath: imageFile.path,
           aspectRatio: const CropAspectRatio(ratioX: 4, ratioY: 5),
-          cropStyle: CropStyle.circle
-      );
+          cropStyle: CropStyle.circle);
 
       if (croppedImage != null) {
         final dir = await getTemporaryDirectory();
         final targetPath = "${dir.absolute.path}/${DateTime.now().millisecondsSinceEpoch}${basename(croppedImage.path)}";
 
-        File? compressedImage = (await compressFile(croppedImage as File, targetPath)) as File?;
+        File? compressedImage = await compressFile(File(croppedImage.path), targetPath);
 
         if (compressedImage != null) {
-          List<File> imagesFile = [croppedImage as File, compressedImage];
+          List<File> imagesFile = [File(croppedImage.path), compressedImage];
           List<String> listOfUrl = await uploadFiles(imagesFile);
           if (listOfUrl.isNotEmpty) {
             UserImageModel userImageModel = UserImageModel(
+                id: userId,
                 profileImage: listOfUrl[0],
-                compressedProfileImage: listOfUrl[1]);
-            ApiResult<bool> uploadImageResult =
-                await getDataManager().updateImageOfUser(userImageModel);
+                compressedProfileImage: listOfUrl[1]
+            );
+            ApiResult<bool> uploadImageResult = await getDataManager().updateImageOfUser(userImageModel);
             await uploadImageResult.when<FutureOr>(
                 success: (bool result) async {
-              UserBasicDataOfflineModel? userBasicDataOfflineModel =
-                  await getDataManager().getUserBasicDataOfflineModel();
-              if (userBasicDataOfflineModel != null) {
-                userBasicDataOfflineModel.profileImage =
-                    userImageModel.profileImage;
-                userBasicDataOfflineModel.compressedProfileImage =
-                    userImageModel.compressedProfileImage;
-                await getDataManager()
-                    .saveUserBasicDataOfflineModel(userBasicDataOfflineModel);
-                profileImage = userImageModel.profileImage;
-                notifyListeners();
-              }
-            }, failure: (NetworkExceptions e) {
+                  UserBasicDataOfflineModel? userBasicDataOfflineModel = await getDataManager().getUserBasicDataOfflineModel();
+                  if (userBasicDataOfflineModel != null) {
+                    userBasicDataOfflineModel.profileImage = userImageModel.profileImage;
+                    userBasicDataOfflineModel.compressedProfileImage = userImageModel.compressedProfileImage;
+                    await getDataManager().saveUserBasicDataOfflineModel(userBasicDataOfflineModel);
+                    profileImage = userImageModel.profileImage;
+                    notifyListeners();
+                  }
+                }, failure: (NetworkExceptions e) {
               showErrorDialog(
                   description: NetworkExceptions.getErrorMessage(e));
             });
@@ -111,17 +109,21 @@ class ProfileViewModel extends CustomBaseViewModel {
           }
         } else {
           stopProgressBar();
-          showErrorDialog(description: "Problem occurred in compressing please try again");
+          showErrorDialog(
+              description: "Problem occurred in compressing please try again");
         }
       } else {
         stopProgressBar();
-        showErrorDialog(description: "Problem occurred in cropping image please try again");
+        showErrorDialog(
+            description: "Problem occurred in cropping image please try again");
       }
     }
   }
 
   Future<List<String>> uploadFiles(List<File> images) async {
-    print("image uploading :- ${images.length}");
+    if (kDebugMode) {
+      print("image uploading :- ${images.length}");
+    }
 
     List<String> downloadedUrlList = [];
 
@@ -151,7 +153,7 @@ class ProfileViewModel extends CustomBaseViewModel {
           uploadTask = compressedProfilePictureRef.putFile(images[1]);
           await uploadTask.whenComplete(() async {
             String downloadUrl =
-                await compressedProfilePictureRef.getDownloadURL();
+            await compressedProfilePictureRef.getDownloadURL();
             downloadedUrlList.add(downloadUrl);
           });
         }
@@ -164,7 +166,7 @@ class ProfileViewModel extends CustomBaseViewModel {
     }
   }
 
-  Future<XFile?> compressFile(File file, String targetPath) async {
+  Future<File?> compressFile(File file, String targetPath) async {
     final filePath = file.absolute.path;
 
     XFile? result = await FlutterImageCompress.compressAndGetFile(
@@ -173,7 +175,7 @@ class ProfileViewModel extends CustomBaseViewModel {
       quality: 50,
     );
 
-    return result;
+    return File(result!.path);
   }
 
   openEditProfileBottomSheet() async {
@@ -204,24 +206,20 @@ class ProfileViewModel extends CustomBaseViewModel {
       String name = sheetResponse.data['name'];
       String status = sheetResponse.data['status'];
 
-      UserNameStatusUpdateModel userNameStatusUpdateModel =
-          UserNameStatusUpdateModel(statusLine: status, name: name);
+      UserNameStatusUpdateModel userNameStatusUpdateModel = UserNameStatusUpdateModel(id: userId, statusLine: status, name: name);
 
       showProgressBar();
-      ApiResult<bool> nameStatusUpdateResult = await getDataManager()
-          .updateNameStatusUser(userNameStatusUpdateModel);
+      ApiResult<bool> nameStatusUpdateResult = await getDataManager().updateNameStatusUser(userNameStatusUpdateModel);
 
       nameStatusUpdateResult.when(success: (bool result) async {
         stopProgressBar();
 
-        UserBasicDataOfflineModel? userBasicDataOfflineModel0 =
-            await getDataManager().getUserBasicDataOfflineModel();
+        UserBasicDataOfflineModel? userBasicDataOfflineModel0 = await getDataManager().getUserBasicDataOfflineModel();
         if (userBasicDataOfflineModel0 != null) {
           userBasicDataOfflineModel0.name = name;
           userBasicDataOfflineModel0.statusLine = status;
 
-          await getDataManager()
-              .saveUserBasicDataOfflineModel(userBasicDataOfflineModel0);
+          await getDataManager().saveUserBasicDataOfflineModel(userBasicDataOfflineModel0);
           getDialogService().showCustomDialog(variant: DialogEnum.success);
 
           userName = userNameStatusUpdateModel.name;

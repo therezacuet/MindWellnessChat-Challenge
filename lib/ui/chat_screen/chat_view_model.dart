@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart' as img;
@@ -12,6 +13,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../base/custom_base_view_model.dart';
+import '../../const/app_const.dart';
 import '../../const/msg_status_const.dart';
 import '../../const/msg_type_const.dart';
 import '../../data/local/app_database.dart';
@@ -69,10 +71,7 @@ class ChatViewModel extends CustomBaseViewModel {
   }
 
   listenForTypingStatus() {
-    Stream<bool> userTypingStreamController =
-        getSocketService().listenForIsTyping(currentUserId!);
-    // Stream<bool> userTypingStreamController = getSocketService().listenForIsTyping(userDataBasicModel.id);
-
+    Stream<bool> userTypingStreamController = getSocketService().listenForIsTyping(currentUserId!);
     userTypingStreamController.listen((event) {
       print("ACTION TYPING EVENT :- " + event.toString());
 
@@ -176,8 +175,7 @@ class ChatViewModel extends CustomBaseViewModel {
     }
     currentUserId ??= await getAuthService().getUserid();
 
-    Participants _participants =
-        Participants(user1Id: currentUserId!, user2Id: userDataBasicModel.id);
+    Participants participants = Participants(user1Id: currentUserId!, user2Id: userDataBasicModel.id);
     String randomMongoId1 = MongoUtils().generateUniqueMongoId();
     int currentTime = DateTime.now().millisecondsSinceEpoch;
     String? networkImageUri;
@@ -234,7 +232,7 @@ class ChatViewModel extends CustomBaseViewModel {
       }
     }
 
-    PrivateMessageModel _privateMessageModel = PrivateMessageModel(
+    PrivateMessageModel privateMessageModel = PrivateMessageModel(
         id: randomMongoId1,
         createdAt: currentTime,
         msgContentType: msgType,
@@ -243,7 +241,7 @@ class ChatViewModel extends CustomBaseViewModel {
         msgContent: inputText,
         senderName: userDataBasicModel.name,
         msgStatus: MsgStatus.sent,
-        participants: _participants,
+        participants: participants,
         senderPlaceholderImage: userDataBasicModel.compressedProfileImage,
         networkFileUrl: networkImageUri,
         blurHashImage: blurHashImage,
@@ -252,7 +250,7 @@ class ChatViewModel extends CustomBaseViewModel {
     await sendMessageWithDataModel(
         inputText: inputText,
         currentTime: currentTime,
-        privateMessageModel: _privateMessageModel,
+        privateMessageModel: privateMessageModel,
         currentUserId: currentUserId!,
         name: userDataBasicModel.name,
         statusLine: '',
@@ -262,31 +260,28 @@ class ChatViewModel extends CustomBaseViewModel {
 
   Future<String?> uploadFiles(File _image) async {
     print("image uploading :- " + _image.length.toString());
-    // try {
-    //   String? uploadUrl;
-    //
-    //   FirebaseStorage storage = FirebaseStorage.instance;
-    //
-    //   Reference chatSharedPictureRef = storage.ref().child(
-    //       AppConst.chatSharedImageStoragePath +
-    //           DateTime.now().millisecondsSinceEpoch.toString() +
-    //           basename(_image.path));
-    //
-    //   UploadTask uploadTask = chatSharedPictureRef.putFile(_image);
-    //   await uploadTask.whenComplete(
-    //     () async {
-    //       uploadUrl = await chatSharedPictureRef.getDownloadURL();
-    //     },
-    //   );
-    //
-    //   return uploadUrl;
-    // } catch (e) {
-    //   stopProgressBar();
-    //   showErrorDialog(description: "Problem occurred while uploading image");
-    //   return null;
-    // }
+    try {
+      String? uploadUrl;
 
-    return null;
+      FirebaseStorage storage = FirebaseStorage.instance;
+
+      Reference chatSharedPictureRef = storage.ref().child(
+          AppConst.chatSharedImageStoragePath +
+              DateTime.now().millisecondsSinceEpoch.toString() +
+              basename(_image.path));
+
+      UploadTask uploadTask = chatSharedPictureRef.putFile(_image);
+      await uploadTask.whenComplete(
+        () async {
+          uploadUrl = await chatSharedPictureRef.getDownloadURL();
+        },
+      );
+      return uploadUrl;
+    } catch (e) {
+      stopProgressBar();
+      showErrorDialog(description: "Problem occurred while uploading image");
+      return null;
+    }
   }
 
   updateSeenForParticularMessage(String msgId, String senderId) async {
@@ -295,15 +290,10 @@ class ChatViewModel extends CustomBaseViewModel {
 
       int seenTime = DateTime.now().millisecondsSinceEpoch;
 
-      SeenAtUpdateModel _seenAtUpdateModel = SeenAtUpdateModel(id: msgId, senderId: senderId, seenAt: seenTime);
-      // ApiResult<bool> seenUpdateResult =
-      //     await getDataManager().updateMsgSeenTime(_seenAtUpdateModel);
-
-      getSocketService().emitUpdateMsgEvent(_seenAtUpdateModel.toJson(),
-          () async {
+      SeenAtUpdateModel seenAtUpdateModel = SeenAtUpdateModel(id: msgId, senderId: senderId, seenAt: seenTime);
+      getSocketService().emitUpdateMsgEvent(seenAtUpdateModel.toJson(), () async {
         print("Msg recieved" + msgId);
-        await getDataManager()
-            .updateSeenTimeLocallyForReceiver(msgId, seenTime);
+        await getDataManager().updateSeenTimeLocallyForReceiver(msgId, seenTime);
 
         Future.delayed(const Duration(milliseconds: 700), () {
           notGoingToUpdateMsgSeenList.add(msgId);
@@ -314,14 +304,14 @@ class ChatViewModel extends CustomBaseViewModel {
 
   getNewItems() async {
     isItemsLoading = true;
-    List<MessagesTableData> _oldMessages = await getDataManager()
+    List<MessagesTableData> oldMessages = await getDataManager()
         .getOldMessages(lastRetrieveDocumentId, userDataBasicModel.id);
-    if (_oldMessages.length < itemPerPage) {
+    if (oldMessages.length < itemPerPage) {
       isAllItemLoaded = true;
     }
 
     pageNumber = pageNumber + 1;
-    listOfMessage.addAll(List.from(_oldMessages));
+    listOfMessage.addAll(List.from(oldMessages));
     lastRetrieveDocumentId = listOfMessage.last.id;
     _streamController.add(listOfMessage);
     await Future.delayed(
@@ -336,10 +326,9 @@ class ChatViewModel extends CustomBaseViewModel {
   Stream<List<MessagesTableData>> getMessagesStream() {
     isItemsLoading = true;
 
-    Stream<List<MessagesTableData>>? _msgStream = getDataManager()
-        .watchNewMessages(userDataBasicModel.id, userDataBasicModel.id);
+    Stream<List<MessagesTableData>>? msgStream = getDataManager().watchNewMessages(userDataBasicModel.id, userDataBasicModel.id);
 
-    _msgStream.listen(
+    msgStream.listen(
       (List<MessagesTableData> event) {
         isItemsLoading = true;
 
@@ -376,11 +365,11 @@ class ChatViewModel extends CustomBaseViewModel {
 
     if (selectedImagePath != "") {
       File imageFile = File(selectedImagePath);
-      ui.Image _decodedImage = await decodeImageFromList(imageFile.readAsBytesSync());
+      ui.Image decodedImage = await decodeImageFromList(imageFile.readAsBytesSync());
 
       Map<String, int> imageInfo = {};
-      imageInfo.putIfAbsent("width", () => _decodedImage.width);
-      imageInfo.putIfAbsent("height", () => _decodedImage.height);
+      imageInfo.putIfAbsent("width", () => decodedImage.width);
+      imageInfo.putIfAbsent("height", () => decodedImage.height);
 
       sendMessage(
           inputText: "image",
@@ -414,13 +403,6 @@ class ChatViewModel extends CustomBaseViewModel {
             DateTime.now().millisecondsSinceEpoch.toString() +
             basename(croppedImage.path);
 
-        // File? compressedImage = await compressFile(croppedImage, targetPath);
-        // if (compressedImage != null) {
-        //   return compressedImage.path;
-        // } else {
-        //   return "";
-        // }
-
         bool result = await resizeImage(croppedImage as File, targetPath);
         if (!result) {
           return "";
@@ -440,8 +422,8 @@ class ChatViewModel extends CustomBaseViewModel {
     if (image != null) {
       try {
         img.Image thumbnail = img.copyResize(image, width: 450);
-        File _targetFile = File(path);
-        _targetFile.writeAsBytesSync(img.encodeJpg(thumbnail));
+        File targetFile = File(path);
+        targetFile.writeAsBytesSync(img.encodeJpg(thumbnail));
         return true;
       } catch (e) {
         return false;
