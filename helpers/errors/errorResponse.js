@@ -1,5 +1,5 @@
-import httpStatusCodes from "../../constants/httpStatusCodes";
-import BaseError from "./baseError";
+const httpStatusCodes =require("../../constants/httpStatusCodes");
+const BaseError = require("./baseError");
 
 const errorResponse = {
     Api400Error({name: name = "BAD_REQUEST", statusCode = httpStatusCodes.BAD_REQUEST, description = "Bad Request", isOperational = true,} = {}) {

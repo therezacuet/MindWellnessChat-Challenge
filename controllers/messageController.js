@@ -1,7 +1,7 @@
-import util from "node:util";
-import msgStatus from "../constants/messageStatus";
-import RecentChatModel from "../models/recentChat";
-import PrivateMessageModel from "../models/privateMessage";
+const util = require("util");
+const msgStatus = require( "../constants/messageStatus");
+const RecentChatModel = require( "../models/recentChat");
+const PrivateMessageModel = require( "../models/privateMessage");
 
 const socketService = require("../services/socketService");
 

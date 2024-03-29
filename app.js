@@ -1,16 +1,16 @@
-import express from "express";
-import morgan from "morgan";
-import { config } from "dotenv";
-import database from "./configs/dbConnection";
-import process from "node:process";
-import initializeFirebase from "./configs/firebaseInit";
-import userRoutes from "routers/user";
-import messageRoutes from "routers/message";
-import {makeSocketConnection} from "./services/socketService";
-import customResponses from "helpers/customResponses";
-import decodeIDToken from "middlewares/tokenVerification";
+const express = require("express");
+const morgan = require("morgan");
+const dotenv = require("dotenv");
+const process = require("process");
+dotenv.config({path: "config.env"});
 
-config({path: "config.env"});
+const database = require("./configs/dbConnection");
+const initializeFirebase = require("./configs/firebaseInit");
+const userRoutes = require( "./routers/user");
+const messageRoutes = require( "./routers/message");
+const {makeSocketConnection} = require( "./services/socketService");
+const customResponses = require( "./helpers/customResponses");
+const decodeIDToken = require( "./middlewares/tokenVerification");
 
 // Define the port number
 const PORT = process.env.PORT || 5000;
@@ -40,7 +40,7 @@ app.use((req, res) => {
 // Initialize the firebase
 initializeFirebase();
 
-// Import the database connection
+// database connection
 database.connectToDb(() => {
       makeSocketConnection(server);
       server.listen(PORT, () => {
@@ -56,7 +56,7 @@ app.use((err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     const className = err.constructor.name;
     console.log("err.message :- " + err.message);
-    if (className == "BaseError") {
+    if (className === "BaseError") {
       res.customizedErrorOutPut(err.message, err.statusCode);
     } else {
       //Error thrown by mongoose validation

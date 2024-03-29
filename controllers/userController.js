@@ -1,7 +1,7 @@
-import util from "node:util";
-import recentChatModel from "../models/recentChat";
-import userModel from "../models/user";
-import errorResponse from "../helpers/errors/errorResponse";
+const util = require("util");
+const recentChatModel = require("../models/recentChat");
+const userModel = require("../models/user");
+const errorResponse  = require("../helpers/errors/errorResponse");
 
 exports.addUser = async (req, res, next) => {
     try {

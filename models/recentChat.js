@@ -1,6 +1,6 @@
-import { Schema, model as _model } from 'mongoose';
+const mongoose = require('mongoose');
 
-const recentChatSchema = new Schema({
+const recentChatSchema = new mongoose.Schema({
     _id:{
         type:String
     },
@@ -33,5 +33,5 @@ const recentChatSchema = new Schema({
     }
 });
 
-const model = _model('recentchats',recentChatSchema);
-export default model;
+const model = mongoose.model('recentchats',recentChatSchema);
+module.exports = model;

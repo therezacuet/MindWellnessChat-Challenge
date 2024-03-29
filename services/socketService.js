@@ -1,4 +1,4 @@
-import util from "node:util";
+const util = require("util");
 const msgStatus = require("../constants/messageStatus");
 const messageController = require("../controllers/messageController");
 const PrivateMessageModel = require("../models/privateMessage");

@@ -1,6 +1,6 @@
-import { Schema, model as _model } from 'mongoose';
+const mongoose = require('mongoose');
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
     _id:{
         type:String,
         required:true,
@@ -54,5 +54,5 @@ const userSchema = new Schema({
     },
 });
 
-const model = _model('users',userSchema);
-export default model;
+const model = mongoose.model('users',userSchema);
+module.exports = model;

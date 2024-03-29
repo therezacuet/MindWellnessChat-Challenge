@@ -1,6 +1,6 @@
-import { Schema, model as _model } from 'mongoose';
+const mongoose = require('mongoose');
 
-const participantsSchema = new Schema({
+const participantsSchema = new mongoose.Schema({
     user1_id:{
         type:String,
         required:true,
@@ -13,7 +13,7 @@ const participantsSchema = new Schema({
     }
 });
 
-const imageInfoSchema = new Schema({
+const imageInfoSchema = new mongoose.Schema({
     width:{
         type:String,
         required:true,
@@ -24,7 +24,7 @@ const imageInfoSchema = new Schema({
     }
 });
 
-const privateMessageSchema = new Schema({
+const privateMessageSchema = new mongoose.Schema({
     participants:{
         type:participantsSchema,
         required:true,
@@ -67,7 +67,7 @@ const privateMessageSchema = new Schema({
     },
     delivered_at:{
         type:Number,
-        default:null 
+        default:null
     },
     msg_status:{
         type:Number,
@@ -99,5 +99,5 @@ const privateMessageSchema = new Schema({
     }
 });
 
-const model = _model('messages',privateMessageSchema);
-export default model;
+const model = mongoose.model('messages',privateMessageSchema);
+module.exports = model;
