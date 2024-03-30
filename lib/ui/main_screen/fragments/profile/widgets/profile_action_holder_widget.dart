@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mind_wellness_chat/config/size_config.dart';
+import 'package:mind_wellness_chat/const/images.dart';
+import 'package:mind_wellness_chat/const/strings.dart';
 import 'package:mind_wellness_chat/ui/main_screen/fragments/profile/widgets/profile_action_holder_single_widget.dart';
 import 'package:stacked/stacked.dart';
-
-import '../../../../../const/app_const.dart';
 import '../profile_view_model.dart';
 
 class ProfileActionHolderWidget extends ViewModelWidget<ProfileViewModel> {
@@ -38,40 +38,40 @@ class ProfileActionHolderWidget extends ViewModelWidget<ProfileViewModel> {
             children: [
               ProfileActionHolderSingleWidget(
                 backgroundColor: const Color(0xff47AA5A),
-                imagePath: "assets/icons/edit_profile.svg",
-                title: AppConst.editProfileMenuTitle,
+                imagePath: Images.editProfile,
+                title: Strings.editProfileMenuTitle,
                 onTap: () {
                   viewModel.openEditProfileBottomSheet();
                 },
               ),
               ProfileActionHolderSingleWidget(
                 backgroundColor: const Color(0xffDEAC43),
-                imagePath: "assets/icons/share_app.svg",
-                title: AppConst.shareAppMenuTitle,
+                imagePath: Images.shareApp,
+                title: Strings.shareAppMenuTitle,
                 onTap: () {},
               ),
               ProfileActionHolderSingleWidget(
                 backgroundColor: const Color(0xff0075FF),
-                imagePath: "assets/icons/terms_and_condition.svg",
-                title: AppConst.termsConditionMenuTitle,
+                imagePath: Images.termsCondition,
+                title: Strings.termsConditionMenuTitle,
                 onTap: () {},
               ),
               ProfileActionHolderSingleWidget(
                 backgroundColor: const Color(0xff54D0CB),
-                imagePath: "assets/icons/help_support.svg",
-                title: AppConst.helpSupportMenuTitle,
+                imagePath: Images.helpSupport,
+                title: Strings.helpSupportMenuTitle,
                 onTap: () {},
               ),
               ProfileActionHolderSingleWidget(
                 backgroundColor: const Color(0xff5EAA47),
-                imagePath: "assets/icons/about_us.svg",
-                title: AppConst.aboutUsMenuTitle,
+                imagePath: Images.aboutUs,
+                title: Strings.aboutUsMenuTitle,
                 onTap: () {},
               ),
               ProfileActionHolderSingleWidget(
                 backgroundColor: const Color(0xffE32929),
-                imagePath: "assets/icons/logout.svg",
-                title: AppConst.logoutMenuTitle,
+                imagePath: Images.logout,
+                title: Strings.logoutMenuTitle,
                 onTap: () {
                   viewModel.logoutUser();
                 },

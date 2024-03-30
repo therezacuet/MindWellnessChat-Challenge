@@ -13,7 +13,7 @@ class SearchResultDisplayList extends ViewModelWidget<SearchViewModel> {
 
   PagingController<int, UserDataBasicModel> _pagingController;
 
-  SearchResultDisplayList(this._pagingController, {Key? key}) : super(key: key, reactive: true);
+  SearchResultDisplayList(this._pagingController, {super.key}) : super(reactive: true);
 
   @override
   Widget build(BuildContext context, SearchViewModel viewModel) {

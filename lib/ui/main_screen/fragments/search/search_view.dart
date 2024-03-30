@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:mind_wellness_chat/config/size_config.dart';
-import 'package:mind_wellness_chat/const/app_const.dart';
 import 'package:mind_wellness_chat/ui/main_screen/fragments/search/search_view_model.dart';
 import 'package:mind_wellness_chat/ui/main_screen/fragments/search/widgets/search_result_display_list.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../../app/locator.dart';
 import '../../../../config/color_config.dart';
+import '../../../../const/strings.dart';
 import '../../../../models/user/user_basic_data_model.dart';
 
 class SearchView extends StatelessWidget {
@@ -43,7 +43,7 @@ class SearchView extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
-                        AppConst.searchHeaderTitle,
+                        Strings.searchHeaderTitle,
                         style: TextStyle(
                             fontSize: 24,
                             letterSpacing: 0.5,
@@ -51,7 +51,7 @@ class SearchView extends StatelessWidget {
                             fontWeight: FontWeight.w600),
                       ),
                       const Text(
-                        AppConst.searchHeaderSubtitleTitle,
+                        Strings.searchHeaderSubtitleTitle,
                         style: TextStyle(
                             fontSize: 15,
                             letterSpacing: 0.5,
@@ -72,7 +72,7 @@ class SearchView extends StatelessWidget {
                           filled: true,
                           fillColor: ColorConfig.greyColor6,
                           prefixIcon: const Icon(Icons.search),
-                          hintText: AppConst.searchHint,
+                          hintText: Strings.searchHint,
                           contentPadding: const EdgeInsets.only(
                               left: 26.0, bottom: 16.0, top: 18.0
                           ),

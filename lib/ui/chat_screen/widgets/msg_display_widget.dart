@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mind_wellness_chat/config/size_config.dart';
+import 'package:mind_wellness_chat/const/enums/image_processing_status.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../config/color_config.dart';
@@ -94,25 +95,25 @@ class MsgDisplayWidget extends ViewModelWidget<ChatViewModel> {
 
                     if (singleMsgData.localFileUrl != null &&
                         singleMsgData.networkFileUrl != null) {
-                      imageProcessingStatus = 'processCompleted';
+                      imageProcessingStatus = ImageProcessingStatus.processCompleted.name;
                     } else if (singleMsgData.localFileUrl != null &&
                         singleMsgData.networkFileUrl == null) {
-                      imageProcessingStatus = 'toUpload';
+                      imageProcessingStatus = ImageProcessingStatus.toUpload.name;
                       //user selected photo but not uploaded
 
                     } else if (singleMsgData.localFileUrl == null &&
                         singleMsgData.networkFileUrl != null) {
                       //user received photo but not downloaded
-                      imageProcessingStatus = 'toDownload';
+                      imageProcessingStatus = ImageProcessingStatus.toDownload.name;
                     } else {
                       return Container();
                     }
 
                     if (singleMsgData.msgStatus == MsgStatus.pending) {
-                      imageProcessingStatus = 'toUpload';
+                      imageProcessingStatus = ImageProcessingStatus.toUpload.name;
                     }
 
-                    if (imageProcessingStatus == 'processCompleted') {
+                    if (imageProcessingStatus == ImageProcessingStatus.processCompleted.name) {
                       //I am sender or receiver and image is uploaded to firebase as well as local storage
                       return ImageBubble(
                         senderName: "",
@@ -163,37 +164,37 @@ class MsgDisplayWidget extends ViewModelWidget<ChatViewModel> {
                             heightOfImage: heightOfImage,
                             isLoading: isImageJustSelected
                                 ? true
-                                : snapshotData == "processCompleted"
+                                : snapshotData == ImageProcessingStatus.processCompleted.name
                                 ? false
-                                : snapshotData == "processRunning"
+                                : snapshotData == ImageProcessingStatus.processRunning.name
                                 ? true
                                 : false,
                             clickListener: (String status) async {
-                              streamController.add("processRunning");
-                              if (status == 'uploading') {
+                              streamController.add(ImageProcessingStatus.processRunning.name);
+                              if (status == ImageProcessingStatus.uploading.name) {
                                 MessagesTableData? msgTableData =
                                 await viewModel.getMessageObjectFromId(singleMsgData.mongoId);
 
                                 if (msgTableData != null) {
                                   bool uploadImageResult =
                                   await viewModel.sendMessage(
-                                      inputText: 'image',
+                                      inputText: MsgType.image,
                                       localFileUrl: singleMsgData.localFileUrl,
                                       imageInfo: singleMsgData.imageInfo,
                                       msgType: MsgType.image,
                                       msgTableData: msgTableData);
 
                                   if (uploadImageResult) {
-                                    streamController.add("processCompleted");
+                                    streamController.add(ImageProcessingStatus.processCompleted.name);
                                   }
                                 }
-                              } else if (status == "downloading") {
+                              } else if (status == ImageProcessingStatus.downloading.name) {
                                 bool downloadImageResult =
                                 await viewModel.downloadImage(
                                     singleMsgData.mongoId,
                                     singleMsgData.networkFileUrl!);
                                 if (downloadImageResult) {
-                                  streamController.add("processCompleted");
+                                  streamController.add(ImageProcessingStatus.processCompleted.name);
                                 }
                               }
                             },

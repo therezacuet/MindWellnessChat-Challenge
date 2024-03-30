@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:mind_wellness_chat/const/strings.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -42,8 +43,8 @@ class ProfileViewModel extends CustomBaseViewModel {
 
   logoutUser() async {
     DialogResponse? dialogResponse = await getDialogService().showCustomDialog(
-        title: AppConst.logoutDialogTitle,
-        description:AppConst.logoutDialogMsg,
+        title: Strings.logoutDialogTitle,
+        description:Strings.logoutDialogMsg,
         variant: DialogEnum.confirmation);
 
     if (dialogResponse != null) {
@@ -67,7 +68,7 @@ class ProfileViewModel extends CustomBaseViewModel {
       changeProfilePicture();
     }
     else{
-      showErrorDialog(description: "You denied permission to pick image.");
+      showErrorDialog(description: Strings.permissionDeniedMessage);
     }
   }
 
@@ -120,12 +121,12 @@ class ProfileViewModel extends CustomBaseViewModel {
         } else {
           stopProgressBar();
           showErrorDialog(
-              description: "Problem occurred in compressing please try again");
+              description: Strings.compressingErrorMessage);
         }
       } else {
         stopProgressBar();
         showErrorDialog(
-            description: "Problem occurred in cropping image please try again");
+            description: Strings.croppingErrorMessage);
       }
     }
   }
@@ -171,7 +172,7 @@ class ProfileViewModel extends CustomBaseViewModel {
       return downloadedUrlList;
     } catch (e) {
       stopProgressBar();
-      showErrorDialog(description: "Problem occurred while uploading image");
+      showErrorDialog(description: Strings.uploadingErrorMessage);
       return [];
     }
   }
@@ -195,8 +196,7 @@ class ProfileViewModel extends CustomBaseViewModel {
 
     if (userBasicDataOfflineModel != null) {
       dialogData.putIfAbsent("name", () => userBasicDataOfflineModel.name);
-      dialogData.putIfAbsent(
-          "status", () => userBasicDataOfflineModel.statusLine);
+      dialogData.putIfAbsent("status", () => userBasicDataOfflineModel.statusLine);
     } else {
       dialogData.putIfAbsent("name", () => "");
       dialogData.putIfAbsent("status", () => "");

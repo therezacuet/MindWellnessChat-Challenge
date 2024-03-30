@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mind_wellness_chat/config/size_config.dart';
 import 'package:mind_wellness_chat/const/app_const.dart';
+import 'package:mind_wellness_chat/const/strings.dart';
 import 'package:mind_wellness_chat/ui/main_screen/fragments/profile/profile_view_model.dart';
 import 'package:mind_wellness_chat/ui/main_screen/fragments/profile/widgets/curve_clipper.dart';
 import 'package:mind_wellness_chat/ui/main_screen/fragments/profile/widgets/profile_action_holder_widget.dart';
@@ -49,7 +50,7 @@ class ProfileView extends StatelessWidget {
                         const Flexible(
                           flex: 1,
                           child: Text(
-                            AppConst.profile,
+                            Strings.profile,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,

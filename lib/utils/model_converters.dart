@@ -18,7 +18,6 @@ class ModelConverters {
       networkFileUrl: Value(privateMessageModel.networkFileUrl),
       imageInfo: Value(privateMessageModel.imageInfo),
       blurHashImageUrl:  Value(privateMessageModel.blurHashImage),
-      // receiverName:Value(_privateMessageModel.re)
     );
   }
 

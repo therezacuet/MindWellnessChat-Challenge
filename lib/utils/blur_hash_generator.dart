@@ -6,8 +6,9 @@ import 'package:image/image.dart' as img;
 class BlurHashGenerator {
 
   generateBlurHash(String imageUrl) async {
-    print("HEYU :- " + imageUrl);
-
+    if (kDebugMode) {
+      print("HASH :- $imageUrl");
+    }
     final data = File(imageUrl).readAsBytesSync();
     final image = img.decodeImage(data);
     String hashValue = await encodeBlurHashAsync(image!);

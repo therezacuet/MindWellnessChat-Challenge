@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mind_wellness_chat/const/images.dart';
+import 'package:mind_wellness_chat/const/strings.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
 
 import '../../../config/color_config.dart';
@@ -47,7 +49,7 @@ class MessageSendContainer extends HookViewModelWidget<ChatViewModel> {
               child: SizedBox(
                 width: 24,
                 height: 24,
-                child: SvgPicture.asset("assets/icons/gallery_icon.svg"),
+                child: SvgPicture.asset(Images.gallery),
               ),
             ),
             const SizedBox(
@@ -70,7 +72,7 @@ class MessageSendContainer extends HookViewModelWidget<ChatViewModel> {
                     ),
                     filled: true,
                     fillColor: Colors.transparent,
-                    hintText: 'Type Something...',
+                    hintText: Strings.typeHint,
                     contentPadding:
                     EdgeInsets.only(left: 16.0, bottom: 16.0, top: 18.0),
                   ),
@@ -90,7 +92,7 @@ class MessageSendContainer extends HookViewModelWidget<ChatViewModel> {
               child: SizedBox(
                 width: 26,
                 height: 26,
-                child: SvgPicture.asset("assets/icons/send_icon.svg",
+                child: SvgPicture.asset(Images.send,
                     color: model.isSendBtnDisable
                         ? Colors.grey.shade500
                         : ColorConfig.accentColor),
@@ -112,14 +114,14 @@ void _showPicker(context, Function callback) {
             children: <Widget>[
               ListTile(
                   leading: const Icon(Icons.photo_library),
-                  title: const Text('Photo Library'),
+                  title: const Text(Strings.photoLibrary),
                   onTap: () {
                     callback(false);
                     Navigator.of(context).pop();
                   }),
               ListTile(
                 leading: const Icon(Icons.photo_camera),
-                title: const Text('Camera'),
+                title: const Text(Strings.camera),
                 onTap: () {
                   callback(true);
                   Navigator.of(context).pop();

@@ -1,5 +1,4 @@
 class MsgStatus{
-
   static const int failed = -1;
   static const int pending = 1;
   static const int sent = 2;

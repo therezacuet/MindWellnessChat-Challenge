@@ -5,6 +5,7 @@ import 'package:motion_tab_bar/MotionTabBar.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../const/strings.dart';
 import 'fragments/profile/profile_view.dart';
 import 'fragments/recent_chat/recent_chat_view.dart';
 import 'fragments/search/search_view.dart';
@@ -56,9 +57,9 @@ class MainScreenViewState extends State<MainScreenView> with TickerProviderState
           ),
           bottomNavigationBar: MotionTabBar(
             controller: _motionTabBarController,
-            initialSelectedTab: AppConst.menuItemChat,
+            initialSelectedTab: Strings.menuItemChat,
             useSafeArea: true,
-            labels: const [AppConst.menuItemSearch, AppConst.menuItemChat, AppConst.menuItemProfile],
+            labels: const [Strings.menuItemSearch, Strings.menuItemChat, Strings.menuItemProfile],
             icons: const [Icons.search, Icons.chat, Icons.account_circle_outlined],
             tabSize: 50,
             tabBarHeight: 55,

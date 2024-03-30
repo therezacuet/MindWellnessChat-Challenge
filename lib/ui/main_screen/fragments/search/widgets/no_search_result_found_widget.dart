@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mind_wellness_chat/config/size_config.dart';
+import 'package:mind_wellness_chat/const/images.dart';
+import 'package:mind_wellness_chat/const/strings.dart';
 
 import '../../../../../app/routes/style_config.dart';
 import '../../../../../config/color_config.dart';
 
 class NoSearchResultFoundWidget extends StatelessWidget {
-  const NoSearchResultFoundWidget({Key? key}) : super(key: key);
+  const NoSearchResultFoundWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,19 +17,19 @@ class NoSearchResultFoundWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-           Container(
+           SizedBox(
             width: 70.horizontal(),
               height: 29.vertical(),
-              child: SvgPicture.asset("assets/images/no_search_result_found_image.svg")),
+              child: SvgPicture.asset(Images.noSearchFound)),
           Text(
-            "Not Found",
+            Strings.noSearchFoundTitle,
             style: h1Title.copyWith(fontSize: 24, letterSpacing: 0.6),
           ),
           const SizedBox(
             height: 4,
           ),
           Text(
-            "Result you are looking for is not found please Try again with\ndifferent name",
+            Strings.noSearchFoundMessage,
             style: h4Title.copyWith(fontSize: 14, letterSpacing: 0.6,color: ColorConfig.greyColor3),
             textAlign: TextAlign.center,
           ),

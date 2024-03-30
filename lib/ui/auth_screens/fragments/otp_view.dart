@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mind_wellness_chat/const/images.dart';
+import 'package:mind_wellness_chat/const/strings.dart';
+import 'package:mind_wellness_chat/ui/auth_screens/fragments/widgets/timer_widget.dart';
 import 'package:stacked/stacked.dart';
-import 'package:timer_count_down/timer_count_down.dart';
-
 import '../../../app/routes/style_config.dart';
 import '../../../config/color_config.dart';
 import '../../widgets/custom_button.dart';
@@ -10,7 +11,7 @@ import '../../widgets/otp_widget.dart';
 import '../auth_view_model.dart';
 
 class OtpView extends ViewModelWidget<AuthViewModel> {
-  OtpView({Key? key}) : super(key: key);
+  OtpView({super.key});
   final timerKey = GlobalKey();
 
   @override
@@ -46,26 +47,25 @@ class OtpView extends ViewModelWidget<AuthViewModel> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Container(
-                      child: SvgPicture.asset(
-                        "assets/images/mobile_otp_image.svg",
-                        fit: BoxFit.fitHeight,
-                        height: 140,
-                      )),
+                  SvgPicture.asset(
+                    Images.otpImage,
+                    fit: BoxFit.fitHeight,
+                    height: 140,
+                  ),
                   const SizedBox(
                     height: 25,
                   ),
                   Column(
                     children: [
                       Text(
-                        "OTP Verification",
+                        Strings.otpVerification,
                         style: h1Title,
                       ),
                       Padding(
                         padding:
                             const EdgeInsets.only(top: 4, left: 20, right: 20),
                         child: Text(
-                          "Please enter the otp that you received on your phone number",
+                          Strings.otpVerificationHint,
                           textAlign: TextAlign.center,
                           style:
                               h5Title.copyWith(color: ColorConfig.greyColor3),
@@ -75,7 +75,7 @@ class OtpView extends ViewModelWidget<AuthViewModel> {
                         height: 54,
                       ),
                       Text(
-                        "Enter OTP",
+                        Strings.otpInputHint,
                         style: h5Title,
                       ),
                       const SizedBox(
@@ -93,7 +93,7 @@ class OtpView extends ViewModelWidget<AuthViewModel> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Did not Receive code?',
+                            Strings.notReceiveOtpCode,
                             style: h5Title.copyWith(letterSpacing: 1.4),
                           ),
                           TimerWidget(viewModel.otpTimeoutSeconds, () {
@@ -104,7 +104,7 @@ class OtpView extends ViewModelWidget<AuthViewModel> {
                         height: 20,
                       ),
                       CustomButton(
-                        "VERIFY OTP",
+                        Strings.verifyOtp,
                         buttonPressed: () {
                           viewModel.submitOtp();
                         },
@@ -117,50 +117,6 @@ class OtpView extends ViewModelWidget<AuthViewModel> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class TimerWidget extends StatelessWidget {
-  int timerEndSeconds = 60;
-  final Function resendOtpCallback;
-  final GlobalKey _key;
-
-  TimerWidget(this.timerEndSeconds, this.resendOtpCallback, this._key,
-      {Key? key})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Countdown(
-      key: _key,
-      seconds: timerEndSeconds,
-      build: (BuildContext context, double time) {
-        if (time.toInt() == 0) {
-          return GestureDetector(
-            onTap: () {
-              resendOtpCallback();
-            },
-            child: const Text(
-              "Request again",
-              style: TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.5),
-            ),
-          );
-        } else {
-          return Text(
-            time.toInt().toString() + "S",
-            style: const TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0.5),
-          );
-        }
-      },
-      interval: const Duration(seconds: 1),
-      onFinished: () {},
     );
   }
 }

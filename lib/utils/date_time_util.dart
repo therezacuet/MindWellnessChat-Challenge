@@ -6,14 +6,14 @@ class DateTimeUtil {
     return DateTime.parse(dateTime);
   }
 
-  String formateDate(DateTime? incomingDateTime) {
+  String formatDate(DateTime? incomingDateTime) {
     if (incomingDateTime == null) {
       return "";
     }
     return DateFormat('dd MMMM yyyy').format(incomingDateTime);
   }
 
-  String formateDateForServer(DateTime? incomingDateTime) {
+  String formatDateForServer(DateTime? incomingDateTime) {
     if (incomingDateTime == null) {
       return "";
     }
@@ -24,16 +24,16 @@ class DateTimeUtil {
     if (incomingTime == null) {
       return "";
     }
-    DateTime _time = DateTime.fromMillisecondsSinceEpoch(incomingTime);
-    return DateFormat('HH:mm').format(_time);
+    DateTime time = DateTime.fromMillisecondsSinceEpoch(incomingTime);
+    return DateFormat('HH:mm').format(time);
   }
 
   String getTimeAgo(int? incomingTime){
     if (incomingTime == null) {
       return "";
     }
-    DateTime _time = DateTime.fromMillisecondsSinceEpoch(incomingTime);
-    return timeago.format(_time);
+    DateTime time = DateTime.fromMillisecondsSinceEpoch(incomingTime);
+    return timeago.format(time);
   }
 
 }

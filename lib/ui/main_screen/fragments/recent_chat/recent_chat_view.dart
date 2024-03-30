@@ -5,7 +5,7 @@ import 'package:mind_wellness_chat/ui/main_screen/fragments/recent_chat/widgets/
 import 'package:stacked/stacked.dart';
 
 import '../../../../config/color_config.dart';
-import '../../../../const/app_const.dart';
+import '../../../../const/strings.dart';
 import '../../../../data/local/app_database.dart';
 import '../../../../models/user/user_basic_data_model.dart';
 import '../../../../utils/date_time_util.dart';
@@ -31,7 +31,7 @@ class RecentChatView extends StatelessWidget {
               backgroundColor: ColorConfig.accentColor,
               centerTitle: false,
               title: Text(
-                AppConst.appName,
+                Strings.appName,
                 style: TextStyle(
                     color: ColorConfig.primaryColor,
                     fontSize: 16,

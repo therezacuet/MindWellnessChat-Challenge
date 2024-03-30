@@ -28,8 +28,6 @@ class OtpWidget extends StatelessWidget {
         selectedColor: ColorConfig.accentColor.withOpacity(0.5),
         inactiveColor: ColorConfig.accentColor.withOpacity(0.5),
         activeFillColor: ColorConfig.accentColor.withOpacity(0.5),
-        // selectedColor: ColorConfig.accentColor.withOpacity(0.5),
-        // inactiveColor: Colors.black38,
         disabledColor: Colors.black38,
       ),
       backgroundColor: Colors.transparent,

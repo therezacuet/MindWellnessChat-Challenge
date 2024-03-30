@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mind_wellness_chat/const/images.dart';
+import 'package:mind_wellness_chat/const/strings.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../app/routes/style_config.dart';
@@ -26,12 +28,12 @@ class StartUpView extends StatelessWidget {
               ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 220),
                 child: SvgPicture.asset(
-                  "assets/images/auth_image.svg",
+                  Images.appLogo,
                   fit: BoxFit.fitHeight,
                 ),
               ),
               const SizedBox(height: 50,),
-              Text("MindWellness Chat", style: h1Title,)
+              Text(Strings.appName, style: h1Title,)
             ],
           ),
         );

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:mind_wellness_chat/const/strings.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
 
 import '../../app/locator.dart';
@@ -28,7 +29,7 @@ class MainScreenViewModel extends CustomIndexTrackingViewModel {
       );
     } else {
       _baseViewModel.getNavigationService().clearStackAndShow(Routes.authView);
-      _baseViewModel.showErrorDialog(description: "You logged out from app due to unexpected problem please login again");
+      _baseViewModel.showErrorDialog(description: Strings.logoutUnexpectedErrorMessage);
     }
   }
 

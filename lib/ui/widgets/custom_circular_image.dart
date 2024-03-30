@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mind_wellness_chat/const/images.dart';
 
 class CustomCircularImage extends StatelessWidget {
   double width;
@@ -22,7 +23,7 @@ class CustomCircularImage extends StatelessWidget {
       ),
       child: imageUri == null
           ? SvgPicture.asset(
-              "assets/images/user_placeholder_image.svg",
+              Images.userPlaceholder,
               fit: BoxFit.cover,
             )
           : CircleAvatar(

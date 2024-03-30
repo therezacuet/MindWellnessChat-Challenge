@@ -5,7 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:mind_wellness_chat/const/app_const.dart';
 import 'package:mind_wellness_chat/services/firebase_push_notification_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -14,6 +13,7 @@ import 'app/routes/setup_routes.router.dart';
 import 'app/setup_bottom_sheet.dart';
 import 'app/setup_dialog.dart';
 import 'config/color_config.dart';
+import 'const/strings.dart';
 import 'firebase_options.dart';
 
 void main() {
@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       builder: EasyLoading.init(),
-      title: AppConst.appName,
+      title: Strings.appName,
       navigatorKey: StackedService.navigatorKey,
       onGenerateRoute: StackedRouter().onGenerateRoute,
       initialRoute: "/",

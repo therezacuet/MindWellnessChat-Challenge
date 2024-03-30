@@ -10,6 +10,8 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mind_wellness_chat/const/strings.dart';
+import 'package:mind_wellness_chat/const/user_status.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -81,12 +83,12 @@ class ChatViewModel extends CustomBaseViewModel {
         print("ACTION TYPING EVENT :- $event");
       }
       if (event) {
-        _userActivityStreamController.add("Typing...");
+        _userActivityStreamController.add(UserStatus.typing);
       } else {
         if (isOnline) {
-          _userActivityStreamController.add("Online");
+          _userActivityStreamController.add(UserStatus.online);
         } else {
-          _userActivityStreamController.add("");
+          _userActivityStreamController.add(UserStatus.none);
         }
       }
     });
@@ -142,7 +144,6 @@ class ChatViewModel extends CustomBaseViewModel {
     try {
       Response response = await Dio().get(
         url,
-        // onReceiveProgress: showDownloadProgress,
         options: Options(
             responseType: ResponseType.bytes,
             followRedirects: false,
@@ -268,20 +269,24 @@ class ChatViewModel extends CustomBaseViewModel {
       return uploadUrl;
     } catch (e) {
       stopProgressBar();
-      showErrorDialog(description: "Problem occurred while uploading image");
+      showErrorDialog(description: Strings.uploadingErrorMessage);
       return null;
     }
   }
 
   updateSeenForParticularMessage(String msgId, String senderId) async {
     if (!notGoingToUpdateMsgSeenList.contains(msgId)) {
-      print("Update seen for Msg id :- $msgId");
+      if (kDebugMode) {
+        print("Update seen for Msg id :- $msgId");
+      }
 
       int seenTime = DateTime.now().millisecondsSinceEpoch;
 
       SeenAtUpdateModel seenAtUpdateModel = SeenAtUpdateModel(id: msgId, senderId: senderId, seenAt: seenTime);
       getSocketService().emitUpdateMsgEvent(seenAtUpdateModel.toJson(), () async {
-        print("Msg recieved" + msgId);
+        if (kDebugMode) {
+          print("Msg recieved" + msgId);
+        }
         await getDataManager().updateSeenTimeLocallyForReceiver(msgId, seenTime);
 
         Future.delayed(const Duration(milliseconds: 700), () {
@@ -353,7 +358,7 @@ class ChatViewModel extends CustomBaseViewModel {
       imageSelected(isCameraSelected);
     }
     else{
-      showErrorDialog(description: "You denied permission to select the image.");
+      showErrorDialog(description: Strings.permissionDeniedMessage);
     }
   }
 

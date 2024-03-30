@@ -28,7 +28,7 @@ class ProfileActionHolderSingleWidget extends StatelessWidget {
               height: 40,
               decoration: BoxDecoration(
                   color: backgroundColor,
-                  borderRadius: BorderRadius.all(Radius.circular(6))),
+                  borderRadius: const BorderRadius.all(Radius.circular(6))),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SvgPicture.asset(imagePath),

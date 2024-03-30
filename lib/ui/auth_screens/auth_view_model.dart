@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mind_wellness_chat/const/strings.dart';
 
 import '../../app/locator.dart';
 import '../../app/routes/setup_routes.router.dart';
 import '../../base/custom_base_view_model.dart';
 import '../../base/custom_index_tracking_view_model.dart';
-import '../../const/app_const.dart';
 import '../../models/backup_found_model.dart';
 import '../../models/user/user_basic_data_offline_model.dart';
 import '../../models/user/user_create_model.dart';
@@ -69,7 +69,7 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
 
     if (resendToken == -1) {
       await _customBaseViewModel.showErrorDialog(
-          description: "Please Try again");
+          description: Strings.otpSentErrorMessage);
       return;
     }
 
@@ -136,10 +136,10 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
   verificationFailed(FirebaseAuthException error) async {
     if (error.code == "invalid-phone-number") {
       await _customBaseViewModel.showErrorDialog(
-          description: "Please enter valid phone number");
+          description: Strings.invalidPhoneErrorMessage);
     } else if (error.code == "too-many-requests") {
       await _customBaseViewModel.showErrorDialog(
-          description: "You can't request otp more than three times per day");
+          description: Strings.tooManyRequestErrorMessage);
     } else {
       await _customBaseViewModel.showErrorDialog(
           description: error.code.toString());
@@ -157,11 +157,10 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
       phoneNumberVerified();
     } else {
       _customBaseViewModel.stopProgressBar();
-      if (isSuccess.contains(
-          "The sms verification code used to create the phone auth credential is invalid")) {
+      if (isSuccess.contains(Strings.invalidOTPCodeErrorMessage)) {
         _customBaseViewModel.showErrorDialog(
-            title: "Invalid OTP",
-            description: "Please Use Valid OTP to continue",
+            title: Strings.invalidOTPErrorTitle,
+            description: Strings.invalidOTPErrorMessage,
             isDismissible: false);
       } else {
         await _customBaseViewModel.showErrorDialog(description: isSuccess);
@@ -190,7 +189,7 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
     String? id = await _customBaseViewModel.getAuthService().getUserid();
     if (id == null) {
       _customBaseViewModel.stopProgressBar();
-      await _customBaseViewModel.showErrorDialog(description: "Please logout and try again");
+      await _customBaseViewModel.showErrorDialog(description: Strings.tryAgainMessage);
       return;
     }
 
@@ -200,7 +199,7 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
           id: id,
           firebaseTokenId: tokenId,
           phoneNumber: phoneNumber,
-          statusLine: AppConst.defaultStatusOfUser);
+          statusLine: Strings.defaultStatusOfUser);
 
       ApiResult<bool> result = await _customBaseViewModel.getDataManager().createUser(userCreateModel);
 
@@ -212,7 +211,7 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
           print(NetworkExceptions.getDioException(e));
         }
         if(NetworkExceptions.getDioException(e) ==  const NetworkExceptions.conflict()){
-          await _customBaseViewModel.showErrorDialog(description: "User already exist please login");
+          await _customBaseViewModel.showErrorDialog(description: Strings.userExistMessage);
         }else{
           await _customBaseViewModel.showErrorDialog(description: NetworkExceptions.getErrorMessage(e));
         }
@@ -222,14 +221,14 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
 
       ApiResult<bool> result = await _customBaseViewModel.getDataManager().updateFirebaseToken(userFirebaseTokenUpdateModel);
       result.when(success: (bool result) async {
-        await signInWithFirebaseAndGoToMainScreen(id!);
+        await signInWithFirebaseAndGoToMainScreen(id);
       }, failure: (NetworkExceptions e) async {
         _customBaseViewModel.stopProgressBar();
         if (kDebugMode) {
           print(NetworkExceptions.getDioException(e));
         }
         if (e == const NetworkExceptions.notFound()) {
-          await _customBaseViewModel.showErrorDialog(title: "Account not exist", description: "Please signup instead");
+          await _customBaseViewModel.showErrorDialog(title: Strings.accountInvalidErrorTitle, description: Strings.accountInvalidErrorMessage);
         } else {
           await _customBaseViewModel.showErrorDialog(description: NetworkExceptions.getErrorMessage(e));
         }
@@ -241,7 +240,7 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
     if (isSignUpScreen) {
       UserBasicDataOfflineModel userBasicDataOfflineModel = UserBasicDataOfflineModel(
           name: userName,
-          statusLine: AppConst.defaultStatusOfUser,
+          statusLine: Strings.defaultStatusOfUser,
           profileImage: null,
           compressedProfileImage: null,
           id: id
@@ -262,10 +261,10 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
           }
         }, failure: (NetworkExceptions e){
           _customBaseViewModel.stopProgressBar();
-          _customBaseViewModel.showErrorDialog(description: "Problem occurred in finding backup");
+          _customBaseViewModel.showErrorDialog(description: Strings.backupErrorMessage);
         });
       } else {
-        _customBaseViewModel.showErrorDialog(description: "Some problem occurred in saving data");
+        _customBaseViewModel.showErrorDialog(description: Strings.savingErrorMessage);
       }
     } else {
       ApiResult<UserBasicDataOfflineModel> userBasicDataOfflineModel0 =
@@ -288,10 +287,10 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
               }
             }, failure: (NetworkExceptions e){
               _customBaseViewModel.stopProgressBar();
-              _customBaseViewModel.showErrorDialog(description: "Problem occurred in finding backup");
+              _customBaseViewModel.showErrorDialog(description: Strings.backupErrorMessage);
             });
           } else {
-            _customBaseViewModel.showErrorDialog(description: "Some problem occurred in saving data");
+            _customBaseViewModel.showErrorDialog(description: Strings.savingErrorMessage);
           }
         },
         failure: (NetworkExceptions e) {

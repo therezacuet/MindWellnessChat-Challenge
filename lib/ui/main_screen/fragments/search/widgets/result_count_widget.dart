@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mind_wellness_chat/const/strings.dart';
 
 import '../../../../../config/color_config.dart';
 
 class ResultCountWidget extends StatelessWidget {
   int totalResultCount = 20;
 
-  ResultCountWidget(this.totalResultCount, {Key? key}) : super(key: key);
+  ResultCountWidget(this.totalResultCount, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class ResultCountWidget extends StatelessWidget {
                   fontWeight: FontWeight.w900),
             ),
             TextSpan(
-              text: " RESULTS",
+              text: Strings.searchResultPageTitle,
               style: TextStyle(
                   color: ColorConfig.accentColor,
                   letterSpacing: 0.5,
