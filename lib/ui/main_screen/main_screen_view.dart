@@ -85,20 +85,3 @@ class MainScreenViewState extends State<MainScreenView> with TickerProviderState
     );
   }
 }
-
-Widget getViewForIndex(int index,Function gotoSearchScreen) {
-  switch (index) {
-    case 0:
-      return RecentChatView((){
-        gotoSearchScreen();
-      });
-    case 1:
-      return const SearchView();
-    case 2:
-      return const ProfileView();
-    default:
-      return RecentChatView((){
-        gotoSearchScreen();
-      });
-  }
-}

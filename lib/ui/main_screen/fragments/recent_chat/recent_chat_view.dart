@@ -26,14 +26,19 @@ class RecentChatView extends StatelessWidget {
       builder: (context, model, child) {
         return Scaffold(
           backgroundColor: Colors.white,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(56.0),
-            child: AppBar(
-                elevation: 0,
-                backgroundColor: ColorConfig.accentColor,
-                title: Text(AppConst.appName, style: TextStyle(color: ColorConfig.primaryColor, fontSize: 16, letterSpacing: 0.8, fontWeight: FontWeight.w600),),
-                actions: []
-            ),
+          appBar: AppBar(
+              elevation: 0,
+              backgroundColor: ColorConfig.accentColor,
+              centerTitle: false,
+              title: Text(
+                AppConst.appName,
+                style: TextStyle(
+                    color: ColorConfig.primaryColor,
+                    fontSize: 16,
+                    letterSpacing: 0.8,
+                    fontWeight: FontWeight.w600
+                ),
+              ),
           ),
           body: Padding(
               padding: const EdgeInsets.only(top: 8.0),

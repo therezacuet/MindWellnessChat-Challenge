@@ -32,14 +32,14 @@ class MainScreenViewModel extends CustomIndexTrackingViewModel {
     }
   }
 
-  connectToSocket(SocketService _socketService,String userId){
-    if (_socketService.getSocketInstance() != null) {
+  connectToSocket(SocketService socketService,String userId){
+    if (socketService.getSocketInstance() != null) {
 
-      if(_socketService.getSocketInstance()!.disconnected){
-        _socketService.connectToSocket(userId);
+      if(socketService.getSocketInstance()!.disconnected){
+        socketService.connectToSocket(userId);
       }
     }else{
-      _socketService.connectToSocket(userId);
+      socketService.connectToSocket(userId);
     }
   }
 
