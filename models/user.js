@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const userSchema = new mongoose.Schema({
     _id:{
         type:String,
@@ -11,7 +10,7 @@ const userSchema = new mongoose.Schema({
         required:true,
         trim:true,
         minlength:1,
-        maxlength: 34,
+        maxlength: 34
     },
     phoneNumber:{
         type:String,
@@ -43,7 +42,7 @@ const userSchema = new mongoose.Schema({
         type:String,
         minlength:1,
         maxlength: 120,
-        default:"Hey, I am using socket chat"
+        default:"Hey, I am using MindWellness chat"
     },
     value:{
         type:Number,

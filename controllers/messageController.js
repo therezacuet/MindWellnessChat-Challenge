@@ -44,9 +44,7 @@ exports.getMissedMessage = async (userId) => {
             $and: [{ receiver_id: userId }, { msg_status: msgStatus.sent }],
         });
 
-        console.log(
-            `-------------------- FOUND MESSAGES FOR : ${userId} :: NEW : ${foundNewMessages.length}  :: UPDATED : ${foundUpdatedMessages.length} -------------------`
-        );
+        console.log(`-------------------- FOUND MESSAGES FOR : ${userId} :: NEW : ${foundNewMessages.length}  :: UPDATED : ${foundUpdatedMessages.length} -------------------`);
 
         for (const message of foundUpdatedMessages) {
 
@@ -125,7 +123,7 @@ exports.getMissedRecentChatUpdate = async (userId) => {
 
         const results = await RecentChatModel.aggregate(aggregationQuery);
         results.forEach(async function(x){
-            console.log("FOIND :- " + util.inspect(x));
+            console.log("FOUND :- " + util.inspect(x));
             socketService.emitAddRecentChatEvent(userId,x);
         });
 

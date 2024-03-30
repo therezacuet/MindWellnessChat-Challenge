@@ -23,7 +23,9 @@ exports.searchSingleUser = async (req, res, next) => {
         if (!searchFor) {
             throw errorResponse.Api400Error({ description: "Search term not found" });
         }
+
         let aggregationQuery;
+
         if (startAfterId != null) {
             aggregationQuery = [
                 {
@@ -94,6 +96,7 @@ exports.searchSingleUser = async (req, res, next) => {
                 },
             ];
         }
+
         const results = await userModel.aggregate(aggregationQuery);
         return res.dataFetchSuccess({ data: results });
     } catch (error) {
