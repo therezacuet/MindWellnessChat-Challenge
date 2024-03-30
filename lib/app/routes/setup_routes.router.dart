@@ -5,16 +5,18 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i6;
+import 'package:flutter/material.dart' as _i7;
 import 'package:flutter/material.dart';
 import 'package:mind_wellness_chat/models/user/user_basic_data_model.dart'
-    as _i7;
+    as _i8;
 import 'package:mind_wellness_chat/ui/auth_screens/auth_view.dart' as _i3;
+import 'package:mind_wellness_chat/ui/backup_found_screen/backup_found_view.dart'
+    as _i6;
 import 'package:mind_wellness_chat/ui/chat_screen/chat_view.dart' as _i5;
 import 'package:mind_wellness_chat/ui/main_screen/main_screen_view.dart' as _i4;
 import 'package:mind_wellness_chat/ui/startup_screens/startup_view.dart' as _i2;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i8;
+import 'package:stacked_services/stacked_services.dart' as _i9;
 
 class Routes {
   static const startUpView = '/';
@@ -25,11 +27,14 @@ class Routes {
 
   static const chatView = '/chat-view';
 
+  static const backUpFoundScreen = '/back-up-found-screen';
+
   static const all = <String>{
     startUpView,
     authView,
     mainScreenView,
     chatView,
+    backUpFoundScreen,
   };
 }
 
@@ -51,32 +56,42 @@ class StackedRouter extends _i1.RouterBase {
       Routes.chatView,
       page: _i5.ChatView,
     ),
+    _i1.RouteDef(
+      Routes.backUpFoundScreen,
+      page: _i6.BackUpFoundScreen,
+    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.StartUpView: (data) {
-      return _i6.MaterialPageRoute<dynamic>(
+      return _i7.MaterialPageRoute<dynamic>(
         builder: (context) => const _i2.StartUpView(),
         settings: data,
       );
     },
     _i3.AuthView: (data) {
-      return _i6.MaterialPageRoute<dynamic>(
+      return _i7.MaterialPageRoute<dynamic>(
         builder: (context) => const _i3.AuthView(),
         settings: data,
       );
     },
     _i4.MainScreenView: (data) {
-      return _i6.MaterialPageRoute<dynamic>(
+      return _i7.MaterialPageRoute<dynamic>(
         builder: (context) => const _i4.MainScreenView(),
         settings: data,
       );
     },
     _i5.ChatView: (data) {
       final args = data.getArgs<ChatViewArguments>(nullOk: false);
-      return _i6.MaterialPageRoute<dynamic>(
+      return _i7.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i5.ChatView(args.userDataBasicModel, key: args.key),
+        settings: data,
+      );
+    },
+    _i6.BackUpFoundScreen: (data) {
+      return _i7.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i6.BackUpFoundScreen(),
         settings: data,
       );
     },
@@ -95,9 +110,9 @@ class ChatViewArguments {
     this.key,
   });
 
-  final _i7.UserDataBasicModel userDataBasicModel;
+  final _i8.UserDataBasicModel userDataBasicModel;
 
-  final _i6.Key? key;
+  final _i7.Key? key;
 
   @override
   String toString() {
@@ -116,7 +131,7 @@ class ChatViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i8.NavigationService {
+extension NavigatorStateExtension on _i9.NavigationService {
   Future<dynamic> navigateToStartUpView([
     int? routerId,
     bool preventDuplicates = true,
@@ -160,8 +175,8 @@ extension NavigatorStateExtension on _i8.NavigationService {
   }
 
   Future<dynamic> navigateToChatView({
-    required _i7.UserDataBasicModel userDataBasicModel,
-    _i6.Key? key,
+    required _i8.UserDataBasicModel userDataBasicModel,
+    _i7.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -171,6 +186,20 @@ extension NavigatorStateExtension on _i8.NavigationService {
     return navigateTo<dynamic>(Routes.chatView,
         arguments:
             ChatViewArguments(userDataBasicModel: userDataBasicModel, key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToBackUpFoundScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.backUpFoundScreen,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -220,8 +249,8 @@ extension NavigatorStateExtension on _i8.NavigationService {
   }
 
   Future<dynamic> replaceWithChatView({
-    required _i7.UserDataBasicModel userDataBasicModel,
-    _i6.Key? key,
+    required _i8.UserDataBasicModel userDataBasicModel,
+    _i7.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -231,6 +260,20 @@ extension NavigatorStateExtension on _i8.NavigationService {
     return replaceWith<dynamic>(Routes.chatView,
         arguments:
             ChatViewArguments(userDataBasicModel: userDataBasicModel, key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithBackUpFoundScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.backUpFoundScreen,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

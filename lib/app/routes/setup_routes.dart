@@ -1,4 +1,5 @@
 import 'package:mind_wellness_chat/ui/auth_screens/auth_view.dart';
+import 'package:mind_wellness_chat/ui/backup_found_screen/backup_found_view.dart';
 import 'package:stacked/stacked_annotations.dart';
 
 import '../../ui/chat_screen/chat_view.dart';
@@ -10,6 +11,7 @@ import '../../ui/startup_screens/startup_view.dart';
     MaterialRoute(page: AuthView),
     MaterialRoute(page: MainScreenView),
     MaterialRoute(page: ChatView),
+    MaterialRoute(page: BackUpFoundScreen),
   ],
 )
 class AppSetup {}
