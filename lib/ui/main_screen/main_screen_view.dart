@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mind_wellness_chat/config/color_config.dart';
 import 'package:mind_wellness_chat/const/app_const.dart';
 import 'package:motion_tab_bar/MotionTabBar.dart';
+import 'package:motion_tab_bar/MotionTabBarController.dart';
 import 'package:stacked/stacked.dart';
 
 import 'fragments/profile/profile_view.dart';
@@ -9,8 +10,30 @@ import 'fragments/recent_chat/recent_chat_view.dart';
 import 'fragments/search/search_view.dart';
 import 'main_screen_view_model.dart';
 
-class MainScreenView extends StatelessWidget {
+class MainScreenView extends StatefulWidget {
   const MainScreenView({super.key});
+  @override
+  MainScreenViewState createState() => MainScreenViewState();
+}
+
+class MainScreenViewState extends State<MainScreenView> with TickerProviderStateMixin{
+  MotionTabBarController? _motionTabBarController;
+
+  @override
+  void initState() {
+    super.initState();
+    _motionTabBarController = MotionTabBarController(
+      initialIndex: 1,
+      length: 3,
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _motionTabBarController!.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +43,19 @@ class MainScreenView extends StatelessWidget {
       },
       builder: (context, model, child) {
         return Scaffold(
-          body: getViewForIndex(model.currentIndex,(){
-            model.setIndex(0);
-          }),
+          body: TabBarView(
+            physics: const NeverScrollableScrollPhysics(), // swipe navigation handling is not supported
+            controller: _motionTabBarController,
+            children: <Widget>[
+              const SearchView(),
+              RecentChatView((){
+                _motionTabBarController?.index = 0;
+              }),
+              const ProfileView()
+            ]
+          ),
           bottomNavigationBar: MotionTabBar(
+            controller: _motionTabBarController,
             initialSelectedTab: AppConst.menuItemChat,
             useSafeArea: true,
             labels: const [AppConst.menuItemSearch, AppConst.menuItemChat, AppConst.menuItemProfile],
@@ -42,7 +74,9 @@ class MainScreenView extends StatelessWidget {
             tabIconSelectedColor: Colors.white,
             tabBarColor: Colors.white,
             onTabItemSelected: (int value) {
-              model.setIndex(value);
+              setState(() {
+                _motionTabBarController!.index = value;
+              });
             },
           ),
         );
@@ -55,11 +89,11 @@ class MainScreenView extends StatelessWidget {
 Widget getViewForIndex(int index,Function gotoSearchScreen) {
   switch (index) {
     case 0:
-      return const SearchView();
-    case 1:
       return RecentChatView((){
         gotoSearchScreen();
       });
+    case 1:
+      return const SearchView();
     case 2:
       return const ProfileView();
     default:

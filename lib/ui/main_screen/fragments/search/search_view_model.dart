@@ -90,13 +90,13 @@ class SearchViewModel extends CustomBaseViewModel {
   Future<List<UserDataBasicModel>> loadMoreData() async {
     print("LOADING MORE DATA :- " + lastLoadedDocumentId.toString());
 
-    UserSearchModel _userSearchModel = UserSearchModel(
+    UserSearchModel userSearchModel = UserSearchModel(
         searchFor: textForSearch, startAfterId: lastLoadedDocumentId);
-    ApiResult<UserSearchResultList> _searchResult =
-        await getDataManager().searchUsers(_userSearchModel);
+    ApiResult<UserSearchResultList> searchResult =
+        await getDataManager().searchUsers(userSearchModel);
     List<UserDataBasicModel> returnResult = [];
 
-    returnResult = await _searchResult.when<FutureOr>(
+    returnResult = await searchResult.when<FutureOr>(
       success: (UserSearchResultList userSearchResultList) {
         if (searchResultList != userSearchResultList.data) {
           searchResultList.addAll(userSearchResultList.data);

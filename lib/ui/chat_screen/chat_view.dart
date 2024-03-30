@@ -47,7 +47,7 @@ class ChatView extends StatelessWidget {
       },
       builder: (context, model, child) {
         return Container(
-          color: ColorConfig.backgroundGray,
+          color: ColorConfig.accentColor,
           child:  SafeArea(
             maintainBottomViewPadding: false,
             child: Scaffold(
@@ -68,7 +68,7 @@ class ChatView extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      color: ColorConfig.backgroundGray,
+                      color: ColorConfig.accentColor,
                       child: Padding(
                         padding: const EdgeInsets.all(14.0),
                         child: Row(
@@ -81,7 +81,7 @@ class ChatView extends StatelessWidget {
                                 padding: const EdgeInsets.only(right: 12),
                                 child: Icon(
                                   Icons.arrow_back_ios,
-                                  color: ColorConfig.greyColor,
+                                  color: ColorConfig.primaryColor,
                                   size: 18,
                                 ),
                               ),
@@ -132,8 +132,7 @@ class AppbarWidget extends ViewModelWidget<ChatViewModel> {
           onTap: () {},
           child: Text(
             viewModel.userDataBasicModel.name,
-            style: const TextStyle(
-                fontSize: 15, letterSpacing: 0.4, fontWeight: FontWeight.w700),
+            style: TextStyle(color: ColorConfig.primaryColor, fontSize: 15, letterSpacing: 0.4, fontWeight: FontWeight.w700),
           ),
         ),
         StreamBuilder<String>(
@@ -146,7 +145,7 @@ class AppbarWidget extends ViewModelWidget<ChatViewModel> {
                     style: TextStyle(
                         fontSize: 13,
                         letterSpacing: 1,
-                        color: ColorConfig.greyColor2,
+                        color: ColorConfig.backgroundGray,
                         fontWeight: FontWeight.w400),
                   )
                 : Container(height: 0);

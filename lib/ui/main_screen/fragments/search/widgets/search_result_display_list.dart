@@ -13,8 +13,7 @@ class SearchResultDisplayList extends ViewModelWidget<SearchViewModel> {
 
   PagingController<int, UserDataBasicModel> _pagingController;
 
-  SearchResultDisplayList(this._pagingController, {Key? key})
-      : super(key: key, reactive: true);
+  SearchResultDisplayList(this._pagingController, {Key? key}) : super(key: key, reactive: true);
 
   @override
   Widget build(BuildContext context, SearchViewModel viewModel) {
@@ -27,9 +26,7 @@ class SearchResultDisplayList extends ViewModelWidget<SearchViewModel> {
       _pagingController = PagingController(firstPageKey: 0);
       _pagingController.addPageRequestListener(
             (pageKey) async {
-          List<UserDataBasicModel> searchResultData =
-          await viewModel.loadSearchUserData();
-
+          List<UserDataBasicModel> searchResultData = await viewModel.loadSearchUserData();
           final isLastPage = searchResultData.length < _pageSize;
           if (isLastPage) {
             _pagingController.appendLastPage(searchResultData);
@@ -41,36 +38,33 @@ class SearchResultDisplayList extends ViewModelWidget<SearchViewModel> {
         },
       );
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Flexible(
-          child: viewModel.textForSearch == "" || viewModel.textForSearch.length < 2 ? const SingleChildScrollView(child: StartSearchingWidget()) : PagedListView<int, UserDataBasicModel>.separated(
-            pagingController: _pagingController,
-            key: const PageStorageKey('listview-maintain-state-key'),
-            physics: const AlwaysScrollableScrollPhysics(),
-            separatorBuilder: (BuildContext context, int index) => const Divider(
-              height: 0,
-            ),
-            builderDelegate: PagedChildBuilderDelegate<UserDataBasicModel>(
-              itemBuilder: (context, UserDataBasicModel userBasicModel, index) {
-                return SingleChatWidget(
-                  chatClickCallback: () {
-                    viewModel.gotoChatScreen(userBasicModel);
-                  },
-                  name: userBasicModel.name,
-                  description: userBasicModel.statusLine,
-                  compressedProfileImage:
-                  userBasicModel.compressedProfileImage,
-                );
+    return Flexible(
+      child: viewModel.textForSearch == "" || viewModel.textForSearch.length < 2 ? const SingleChildScrollView(child: StartSearchingWidget()) : PagedListView<int, UserDataBasicModel>.separated(
+        pagingController: _pagingController,
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        key: const PageStorageKey('listview-maintain-state-key'),
+        physics: const AlwaysScrollableScrollPhysics(),
+        separatorBuilder: (BuildContext context, int index) => const Divider(
+          height: 0,
+        ),
+        builderDelegate: PagedChildBuilderDelegate<UserDataBasicModel>(
+          itemBuilder: (context, UserDataBasicModel userBasicModel, index) {
+            return SingleChatWidget(
+              chatClickCallback: () {
+                viewModel.gotoChatScreen(userBasicModel);
               },
-              noItemsFoundIndicatorBuilder: (_) => const SingleChildScrollView(
-                child: NoSearchResultFoundWidget(),
-              ),
-            ),
+              name: userBasicModel.name,
+              description: userBasicModel.statusLine,
+              compressedProfileImage:
+              userBasicModel.compressedProfileImage,
+            );
+          },
+          noItemsFoundIndicatorBuilder: (_) => const SingleChildScrollView(
+            child: NoSearchResultFoundWidget(),
           ),
         ),
-      ],
+      ),
     );
   }
 }

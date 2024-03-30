@@ -183,7 +183,7 @@ class ChatViewModel extends CustomBaseViewModel {
 
     if (msgTableData == null) {
 
-      MessagesTableCompanion _newMessageObject = MessagesTableCompanion.insert(
+      MessagesTableCompanion newMessageObject = MessagesTableCompanion.insert(
           msgContentType: msgType,
           msgContent: inputText,
           msgStatus: MsgStatus.pending,
@@ -198,7 +198,7 @@ class ChatViewModel extends CustomBaseViewModel {
           imageInfo: Value(imageInfo),
           blurHashImageUrl: Value(blurHashImage));
 
-      await getDataManager().insertNewMessage(_newMessageObject);
+      await getDataManager().insertNewMessage(newMessageObject);
 
     }else{
 

@@ -27,7 +27,7 @@ class SingleChatWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 6,bottom: 6,left: 4),
       child: ListTile(
-          focusColor:Colors.grey,
+        focusColor:Colors.grey,
         onTap: (){
           chatClickCallback();
         },

@@ -75,7 +75,8 @@ class SearchView extends StatelessWidget {
                           prefixIcon: const Icon(Icons.search),
                           hintText: AppConst.searchHint,
                           contentPadding: const EdgeInsets.only(
-                              left: 26.0, bottom: 16.0, top: 18.0),
+                              left: 26.0, bottom: 16.0, top: 18.0
+                          ),
                         ),
                         style: const TextStyle(
                           fontSize: 14,
