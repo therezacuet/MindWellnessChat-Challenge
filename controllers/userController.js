@@ -96,8 +96,10 @@ exports.searchSingleUser = async (req, res, next) => {
                 },
             ];
         }
-
-        const results = await userModel.aggregate(aggregationQuery);
+        console.log("aggregationQuery :- " + util.inspect(aggregationQuery));
+        const aggregate = userModel.aggregate(aggregationQuery);
+        const results = await aggregate.exec();
+        console.log("search results :- " + util.inspect(results));
         return res.dataFetchSuccess({ data: results });
     } catch (error) {
         next(error);
@@ -268,6 +270,7 @@ exports.getUserBackUpDetails = async (req, res, next) => {
 exports.getUserBackUpData = async (req, res, next) => {
     try {
         const _id = req.query._id;
+        console.log('userId ',_id);
         if (!_id) {
             throw errorResponse.idNotFoundError();
         }

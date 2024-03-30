@@ -21,7 +21,6 @@ exports.addToRecentChat = async (recentChatModel, isUser1) => {
 exports.updateRecentMessage = async (req,res,next) => {
     const updateObj = req.body;
     const _id = req.body._id;
-    delete updateObj["_id"];
     console.log("eq.body :- " + util.inspect(updateObj));
     console.log("eq.body :- " +req.body._id);
     try {
@@ -120,8 +119,8 @@ exports.getMissedRecentChatUpdate = async (userId) => {
                 }
             }
         ];
-
-        const results = await RecentChatModel.aggregate(aggregationQuery);
+        const results = await RecentChatModel.aggregate(aggregationQuery).exec();
+        console.log("RESULT FOUND :- " + util.inspect(results));
         results.forEach(async function(x){
             console.log("FOUND :- " + util.inspect(x));
             socketService.emitAddRecentChatEvent(userId,x);
