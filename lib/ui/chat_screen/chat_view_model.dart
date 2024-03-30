@@ -347,10 +347,18 @@ class ChatViewModel extends CustomBaseViewModel {
     return _streamController.stream;
   }
 
+  checkPermissionAndPickImage(bool isCameraSelected) async {
+    final hasPermission = isCameraSelected ? await requestCameraPermission() : await requestPhotoPermission();
+    if(hasPermission){
+      imageSelected(isCameraSelected);
+    }
+    else{
+      showErrorDialog(description: "You denied permission to select the image.");
+    }
+  }
+
   imageSelected(bool isCameraSelected) async {
     String selectedImagePath = await selectImage(isCameraSelected);
-
-    print("selectedImagePath :-  " + selectedImagePath);
 
     if (selectedImagePath != "") {
       File imageFile = File(selectedImagePath);

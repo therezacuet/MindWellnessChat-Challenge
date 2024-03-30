@@ -61,6 +61,16 @@ class ProfileViewModel extends CustomBaseViewModel {
     }
   }
 
+  checkPermissionAndPickImage() async {
+    final hasPermission = await requestPhotoPermission();
+    if(hasPermission){
+      changeProfilePicture();
+    }
+    else{
+      showErrorDialog(description: "You denied permission to pick image.");
+    }
+  }
+
   changeProfilePicture() async {
     File imageFile;
     final ImagePicker picker = ImagePicker();

@@ -11,14 +11,14 @@ class MessageSendContainer extends HookViewModelWidget<ChatViewModel> {
   const MessageSendContainer({super.key}) : super(reactive: true);
 
   @override
-  Widget buildViewModelWidget(BuildContext context, ChatViewModel viewModel) {
+  Widget buildViewModelWidget(BuildContext context, ChatViewModel model) {
     TextEditingController msgSendTextController = useTextEditingController();
     msgSendTextController.addListener(() {
       String inputText = msgSendTextController.text;
       if (inputText.isNotEmpty) {
-        viewModel.setSendBtnStatus(false);
+        model.setSendBtnStatus(false);
       } else {
-        viewModel.setSendBtnStatus(true);
+        model.setSendBtnStatus(true);
       }
     });
 
@@ -41,10 +41,10 @@ class MessageSendContainer extends HookViewModelWidget<ChatViewModel> {
             GestureDetector(
               onTap: () {
                 _showPicker(context, (bool isCameraSelected) {
-                  viewModel.imageSelected(isCameraSelected);
+                  model.checkPermissionAndPickImage(isCameraSelected);
                 });
               },
-              child: Container(
+              child: SizedBox(
                 width: 24,
                 height: 24,
                 child: SvgPicture.asset("assets/icons/gallery_icon.svg"),
@@ -58,7 +58,7 @@ class MessageSendContainer extends HookViewModelWidget<ChatViewModel> {
                 color: Colors.white,
                 child: TextField(
                   onChanged: (txt) {
-                    viewModel.inputTextChanging();
+                    model.inputTextChanging();
                   },
                   controller: msgSendTextController,
                   decoration: const InputDecoration(
@@ -82,8 +82,8 @@ class MessageSendContainer extends HookViewModelWidget<ChatViewModel> {
             ),
             GestureDetector(
               onTap: () {
-                if (!viewModel.isSendBtnDisable) {
-                  viewModel.sendMessage(inputText: msgSendTextController.text, msgType: MsgType.txt);
+                if (!model.isSendBtnDisable) {
+                  model.sendMessage(inputText: msgSendTextController.text, msgType: MsgType.txt);
                   msgSendTextController.text = "";
                 }
               },
@@ -91,7 +91,7 @@ class MessageSendContainer extends HookViewModelWidget<ChatViewModel> {
                 width: 26,
                 height: 26,
                 child: SvgPicture.asset("assets/icons/send_icon.svg",
-                    color: viewModel.isSendBtnDisable
+                    color: model.isSendBtnDisable
                         ? Colors.grey.shade500
                         : ColorConfig.accentColor),
               ),

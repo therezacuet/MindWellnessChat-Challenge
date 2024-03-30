@@ -1,6 +1,9 @@
 
+import 'dart:io';
+
 import 'package:drift/drift.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -182,5 +185,30 @@ class CustomBaseViewModel extends BaseViewModel {
         },
       );
     }
+  }
+
+  // Request the files permission and updates the UI accordingly
+  Future<bool> requestPhotoPermission() async {
+    PermissionStatus result;
+    // In Android we need to request the storage permission,
+    // while in iOS is the photos permission
+    if (Platform.isAndroid) {
+      result = await Permission.storage.request();
+    } else {
+      result = await Permission.photos.request();
+    }
+    if (result.isGranted) {
+      return true;
+    }
+    return false;
+  }
+
+  // Request the camera permission and updates the UI accordingly
+  Future<bool> requestCameraPermission() async {
+    PermissionStatus result = await Permission.camera.request();
+    if (result.isGranted) {
+      return true;
+    }
+    return false;
   }
 }

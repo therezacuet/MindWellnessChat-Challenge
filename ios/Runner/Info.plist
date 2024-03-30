@@ -52,5 +52,12 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<!-- Permission options for the `photos` group -->
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>This permission required to update profile picture and send image message</string>
+    <!-- Permission options for the `camera` group -->
+    <key>NSCameraUsageDescription</key>
+    <string>This permission required to update profile picture and send image message</string>
+
 </dict>
 </plist>
