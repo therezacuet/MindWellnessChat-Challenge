@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart' as img;
@@ -47,9 +48,11 @@ class ChatViewModel extends CustomBaseViewModel {
       StreamController<String>();
   final ImagePicker _picker = ImagePicker();
 
-  setUserData(UserDataBasicModel _inputDataBasicModel) async {
-    userDataBasicModel = _inputDataBasicModel;
-    print("userDataBasicModel :- " + userDataBasicModel.id);
+  setUserData(UserDataBasicModel inputDataBasicModel) async {
+    userDataBasicModel = inputDataBasicModel;
+    if (kDebugMode) {
+      print("userDataBasicModel :- ${userDataBasicModel.id}");
+    }
     currentUserId = await getAuthService().getUserid();
   }
 
@@ -59,8 +62,9 @@ class ChatViewModel extends CustomBaseViewModel {
 
 
     userConnectionStatusChangeStreamController.listen((event) {
-      print("userConnectionStatusChangeStreamController");
-      print(event);
+      if (kDebugMode) {
+        print("userConnectionStatusChangeStreamController");
+      }
       isOnline = event;
       if (event) {
         _userActivityStreamController.add("Online");
@@ -73,8 +77,9 @@ class ChatViewModel extends CustomBaseViewModel {
   listenForTypingStatus() {
     Stream<bool> userTypingStreamController = getSocketService().listenForIsTyping(currentUserId!);
     userTypingStreamController.listen((event) {
-      print("ACTION TYPING EVENT :- " + event.toString());
-
+      if (kDebugMode) {
+        print("ACTION TYPING EVENT :- $event");
+      }
       if (event) {
         _userActivityStreamController.add("Typing...");
       } else {
@@ -122,10 +127,7 @@ class ChatViewModel extends CustomBaseViewModel {
 
   Future<bool> downloadImage(String msgId, String networkUrl) async {
     var tempDir = await getTemporaryDirectory();
-    final targetPath = tempDir.path +
-        "/" +
-        DateTime.now().millisecondsSinceEpoch.toString() +
-        basename(networkUrl);
+    final targetPath = "${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}${basename(networkUrl)}";
     bool result = await download2(networkUrl, targetPath);
     if (result) {
       await getDataManager().updateMsgImageUrl(
@@ -141,7 +143,6 @@ class ChatViewModel extends CustomBaseViewModel {
       Response response = await Dio().get(
         url,
         // onReceiveProgress: showDownloadProgress,
-        //Received data with List<int>
         options: Options(
             responseType: ResponseType.bytes,
             followRedirects: false,
@@ -163,18 +164,11 @@ class ChatViewModel extends CustomBaseViewModel {
     return await getDataManager().getMessageFromId(id);
   }
 
-  sendMessage(
-      {required String inputText,
-      required String msgType,
-      String? localFileUrl,
-      Map<String, dynamic>? imageInfo,
-      MessagesTableData? msgTableData}) async {
-
+  sendMessage({required String inputText, required String msgType, String? localFileUrl, Map<String, dynamic>? imageInfo, MessagesTableData? msgTableData}) async {
     if (inputText == "" || currentUserId == null) {
       return;
     }
     currentUserId ??= await getAuthService().getUserid();
-
     Participants participants = Participants(user1Id: currentUserId!, user2Id: userDataBasicModel.id);
     String randomMongoId1 = MongoUtils().generateUniqueMongoId();
     int currentTime = DateTime.now().millisecondsSinceEpoch;
@@ -182,7 +176,6 @@ class ChatViewModel extends CustomBaseViewModel {
     String? blurHashImage;
 
     if (msgTableData == null) {
-
       MessagesTableCompanion newMessageObject = MessagesTableCompanion.insert(
           msgContentType: msgType,
           msgContent: inputText,
@@ -196,12 +189,11 @@ class ChatViewModel extends CustomBaseViewModel {
           localFileUrl: Value(localFileUrl),
           networkFileUrl: Value(networkImageUri),
           imageInfo: Value(imageInfo),
-          blurHashImageUrl: Value(blurHashImage));
-
+          blurHashImageUrl: Value(blurHashImage)
+      );
       await getDataManager().insertNewMessage(newMessageObject);
 
     }else{
-
       randomMongoId1 = msgTableData.mongoId;
       localFileUrl = msgTableData.localFileUrl;
       networkImageUri = msgTableData.networkFileUrl;
@@ -217,15 +209,16 @@ class ChatViewModel extends CustomBaseViewModel {
     if (localFileUrl != null && networkImageUri == null) {
       selectedImageMsgId = randomMongoId1;
       networkImageUri = await uploadFiles(File(localFileUrl));
+
       if (networkImageUri != null) {
         // blurHashImage
-        blurHashImage =
-            await BlurHashGenerator().generateBlurHash(localFileUrl);
+        blurHashImage = await BlurHashGenerator().generateBlurHash(localFileUrl);
         await getDataManager().updateMsgImageUrl(
             msgId: randomMongoId1,
             isNetworkUrl: true,
             url: networkImageUri,
-            blurHashImageUri: blurHashImage);
+            blurHashImageUri: blurHashImage
+        );
         selectedImageMsgId = '';
       } else {
         return;
@@ -258,19 +251,15 @@ class ChatViewModel extends CustomBaseViewModel {
         id: userDataBasicModel.id);
   }
 
-  Future<String?> uploadFiles(File _image) async {
-    print("image uploading :- " + _image.length.toString());
+  Future<String?> uploadFiles(File image) async {
+    if (kDebugMode) {
+      print("image uploading :- ${image.length}");
+    }
     try {
       String? uploadUrl;
-
       FirebaseStorage storage = FirebaseStorage.instance;
-
-      Reference chatSharedPictureRef = storage.ref().child(
-          AppConst.chatSharedImageStoragePath +
-              DateTime.now().millisecondsSinceEpoch.toString() +
-              basename(_image.path));
-
-      UploadTask uploadTask = chatSharedPictureRef.putFile(_image);
+      Reference chatSharedPictureRef = storage.ref().child(AppConst.chatSharedImageStoragePath + DateTime.now().millisecondsSinceEpoch.toString() + basename(image.path));
+      UploadTask uploadTask = chatSharedPictureRef.putFile(image);
       await uploadTask.whenComplete(
         () async {
           uploadUrl = await chatSharedPictureRef.getDownloadURL();
@@ -286,7 +275,7 @@ class ChatViewModel extends CustomBaseViewModel {
 
   updateSeenForParticularMessage(String msgId, String senderId) async {
     if (!notGoingToUpdateMsgSeenList.contains(msgId)) {
-      print("Update seen for Msg id :- " + msgId);
+      print("Update seen for Msg id :- $msgId");
 
       int seenTime = DateTime.now().millisecondsSinceEpoch;
 
@@ -375,7 +364,8 @@ class ChatViewModel extends CustomBaseViewModel {
           inputText: "image",
           msgType: MsgType.image,
           localFileUrl: selectedImagePath,
-          imageInfo: imageInfo);
+          imageInfo: imageInfo
+      );
     }
   }
 
@@ -398,12 +388,8 @@ class ChatViewModel extends CustomBaseViewModel {
 
       if (croppedImage != null) {
         final dir = await getTemporaryDirectory();
-        final targetPath = dir.absolute.path +
-            "/" +
-            DateTime.now().millisecondsSinceEpoch.toString() +
-            basename(croppedImage.path);
-
-        bool result = await resizeImage(croppedImage as File, targetPath);
+        final targetPath = "${dir.absolute.path}/${DateTime.now().millisecondsSinceEpoch}${basename(croppedImage.path)}";
+        bool result = await resizeImage(File(croppedImage.path) , targetPath);
         if (!result) {
           return "";
         }

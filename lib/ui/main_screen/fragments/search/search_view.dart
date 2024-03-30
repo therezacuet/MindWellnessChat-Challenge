@@ -11,7 +11,7 @@ import '../../../../config/color_config.dart';
 import '../../../../models/user/user_basic_data_model.dart';
 
 class SearchView extends StatelessWidget {
-  const SearchView({Key? key}) : super(key: key);
+  const SearchView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,6 @@ class SearchView extends StatelessWidget {
               model.textChange(inputText);
             },
           );
-
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import '../app/locator.dart';
@@ -322,11 +323,13 @@ class SocketService {
     );
 
     socket!.on('newRecentChat', (data) async {
-      print("SOCKET EVENT :- " + "newRecentChat :-  " + data.toString());
+      if (kDebugMode) {
+        print("SOCKET EVENT :- " + "newRecentChat :-  " + data.toString());
+      }
       try {
-        RecentChatServerModel _recentChatServerModel = RecentChatServerModel.fromJson(data);
+        RecentChatServerModel recentChatServerModel = RecentChatServerModel.fromJson(data);
         bool isUser1 = false;
-        List<String> participantList = List.from(_recentChatServerModel.participants);
+        List<String> participantList = List.from(recentChatServerModel.participants);
         participantList.sort();
         int indexOfCurrentUser = participantList.indexWhere((element) => element == idOfUser);
         if (indexOfCurrentUser == 0) {
@@ -334,32 +337,34 @@ class SocketService {
         }
 
         RecentChatLocalModel recentChatLocalModel = RecentChatLocalModel(
-          id: _recentChatServerModel.id,
-          userName: isUser1
-              ? _recentChatServerModel.user2Name
-              : _recentChatServerModel.user1Name,
-          userCompressedImage: isUser1
-              ? _recentChatServerModel.user2CompressedImage
-              : _recentChatServerModel.user1CompressedImage,
-          participants: participantList,
+            id: recentChatServerModel.id,
+            userName: isUser1
+                ? recentChatServerModel.user2Name
+                : recentChatServerModel.user1Name,
+            userCompressedImage: isUser1
+                ? recentChatServerModel.user2CompressedImage
+                : recentChatServerModel.user1CompressedImage,
+            participants: participantList,
         );
 
         List<RecentChatTableData> recentChatTableData = await _dataManager.getRecentChatTableDataFromUserIds(recentChatLocalModel.participants);
 
-        print("_recentChatLocalModel :- ${recentChatLocalModel.toJson()}");
+        if (kDebugMode) {
+          print("_recentChatLocalModel :- ${recentChatLocalModel.toJson()}");
+        }
 
         if (recentChatTableData.isEmpty) {
           await _dataManager.insertNewRecentChat(recentChatLocalModel);
         } else {
           int totalMsgCount = (recentChatTableData[0].unread_msg ?? 0); // +
-          RecentChatTableCompanion recentChatTableCompanion =
-              RecentChatTableCompanion(
+          RecentChatTableCompanion recentChatTableCompanion = RecentChatTableCompanion(
                   id: Value(recentChatTableData[0].id),
                   unread_msg: Value(totalMsgCount),
                   user_name: Value(recentChatLocalModel.userName),
                   user_compressed_image: Value(recentChatLocalModel.userCompressedImage),
                   last_msg_time: Value(recentChatTableData[0].last_msg_time),
-                  last_msg_text: Value(recentChatTableData[0].last_msg_text));
+                  last_msg_text: Value(recentChatTableData[0].last_msg_text)
+          );
           await _dataManager.updateRecentChatTableData(recentChatTableCompanion);
         }
 
@@ -373,7 +378,9 @@ class SocketService {
 
         updateObject.putIfAbsent("_id", () => recentChatLocalModel.id);
         updateObject.putIfAbsent(keyOfUserLocalUpdate, () => true);
-
+        if (kDebugMode) {
+          print('updateObject $updateObject');
+        }
         await _dataManager.updateRecentChat(updateObject);
       } catch (e) {}
     });

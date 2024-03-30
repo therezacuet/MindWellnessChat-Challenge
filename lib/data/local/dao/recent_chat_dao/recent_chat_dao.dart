@@ -9,13 +9,8 @@ import '../../tables/recent_chat_table/recent_chat_table.dart';
 part 'recent_chat_dao.g.dart';
 
 @DriftAccessor(tables: [RecentChatTable])
-class RecentChatDao extends DatabaseAccessor<AppDatabase>
-    with _$RecentChatDaoMixin
-    implements RecentChatDaoHelper {
+class RecentChatDao extends DatabaseAccessor<AppDatabase> with _$RecentChatDaoMixin implements RecentChatDaoHelper {
   final AppDatabase db;
-
-  // int pageSize = 100;
-
   RecentChatDao(this.db) : super(db);
 
   @override
@@ -24,18 +19,17 @@ class RecentChatDao extends DatabaseAccessor<AppDatabase>
     print("JEIO :- " + _recentChatModel.toJson().toString());
     print("JEIO :- " + _recentChatModel.userCompressedImage.toString());
 
-    RecentChatTableCompanion _recentChatTableCompanion =
-    RecentChatTableCompanion(
+    RecentChatTableCompanion recentChatTableCompanion = RecentChatTableCompanion(
       id: Value(_recentChatModel.id),
       user_name: Value(_recentChatModel.userName),
       user_compressed_image: Value(_recentChatModel.userCompressedImage),
       participants: Value(_recentChatModel.participants),
-      // unread_msg: Value(_recentChatModel.unreadMsg ?? 0),
+      //unread_msg: Value(_recentChatModel.unreadMsg ?? 0),
       last_msg_time: Value(_recentChatModel.lastMsgTime),
       last_msg_text: Value(_recentChatModel.lastMsg),
     );
 
-    await into(recentChatTable).insert(_recentChatTableCompanion,mode: InsertMode.insertOrReplace);
+    await into(recentChatTable).insert(recentChatTableCompanion,mode: InsertMode.insertOrReplace);
   }
 
   @override
@@ -67,9 +61,9 @@ class RecentChatDao extends DatabaseAccessor<AppDatabase>
 
   @override
   Future makeAllMsgRead(List<String> userIdList) async {
-    RecentChatTableCompanion _recentChatTableCompanion = const RecentChatTableCompanion(unread_msg: Value(0));
+    RecentChatTableCompanion recentChatTableCompanion = const RecentChatTableCompanion(unread_msg: Value(0));
     return await (update(recentChatTable)
       ..where((tbl) => tbl.participants.equalsValue(userIdList))).write(
-        _recentChatTableCompanion);
+        recentChatTableCompanion);
   }
 }
