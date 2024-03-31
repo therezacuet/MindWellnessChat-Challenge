@@ -30,7 +30,7 @@ void main() {
       );
 
       await AwesomeNotifications().initialize(
-        null,
+        'resource://drawable/ic_stat_notification',
         [
           NotificationChannel(
             channelKey: 'basic_channel',
