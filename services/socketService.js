@@ -3,6 +3,8 @@ const msgStatus = require("../constants/messageStatus");
 const messageController = require("../controllers/messageController");
 const PrivateMessageModel = require("../models/privateMessage");
 const isUserOne = require("../utils/appUtils");
+const pushNotificationService = require("../services/pushNotificationService");
+const userModel = require("../models/user");
 
 let io;
 let socketConnection;
@@ -25,9 +27,7 @@ const socketConnected = (userId) => {
 };
 
 const socketDisConnected = (userId) => {
-    console.log(
-        `-------------------- USER with : ${userId} is OFFLINE-------------------`
-    );
+    console.log(`-------------------- USER with : ${userId} is OFFLINE-------------------`);
     emitUserStatus(userId,false);
 };
 
@@ -39,7 +39,6 @@ const emitPrivateMessageEvent = (exports.emitPrivateMessageEvent = (
     roomId,
     message
 ) => {
-    console.log("Start emiting private msg 1 :- " + util.inspect(message));
     io.to(roomId).emit("newPrivateMessage", message);
 });
 
@@ -52,9 +51,6 @@ const emitUpdateExistingMessageEvent = (exports.emitUpdateExistingMessageEvent =
          deliveredAt = null,
          withAcknowledgeApi = false,
      } = {}) => {
-        console.log("deliveredAt  :- " + deliveredAt);
-        console.log("deliveredAt seenAt :- " + seenAt);
-
         let message = {
             msg_status: status,
             _id: msgId,
@@ -84,9 +80,6 @@ const emitUpdateExistingMessageEvent = (exports.emitUpdateExistingMessageEvent =
             };
         }
 
-        console.log("deliveredAt seenAt 123 :- " + util.inspect(message));
-
-        // socketConnection.to(roomId).emit("updateExistingMessage", message);
         if (withAcknowledgeApi) {
             io.to(roomId).emit("updateExistingMessageWithAcknowledgeApi", message);
         } else {
@@ -96,7 +89,6 @@ const emitUpdateExistingMessageEvent = (exports.emitUpdateExistingMessageEvent =
 
 function listenToEvents(socket, userId) {
     socket.on("newPrivateMessage", async (data, callback) => {
-        console.log("newPrivateMessage :- " + util.inspect(data));
         const privateMessageModel = data.privateMessageModel;
         const recentChatModel = data.recentChatModel;
 
@@ -108,7 +100,6 @@ function listenToEvents(socket, userId) {
         const senderIsUserOne = isUserOne(listOfParticipants, senderId);
 
         try {
-            console.log("newPrivateMessage :- " + "callbackFired");
             callback();
 
             if (!recentChatModel.should_update_recent_chat) {
@@ -122,16 +113,23 @@ function listenToEvents(socket, userId) {
             emitPrivateMessageEvent(receiverId, privateMessageModel);
             await PrivateMessageModel.create(privateMessageModel);
 
-            // res.dataUpdateSuccess({ message: "Message Created Successfully" });
+            // send push notification
+            const receiverInfo = await userModel.findById(receiverId);
+            const message = {
+                data: {
+                    id: senderId,
+                    title: recentChatModel.user1_name,
+                    body: privateMessageModel.msg_content,
+                    image: privateMessageModel.network_file_url ?? "",
+                },
+                token: receiverInfo.firebase_token_id,
+            };
+            await pushNotificationService.sendPushNotification(message);
         } catch (error) {
-            console.log("newPrivateMessage " + "Error :- " + error);
-            // next(error);
         }
     });
 
     socket.on("updatePrivateMessage", async (data, callback) => {
-        console.log("updateMessageEvent :- " + util.inspect(data));
-
         try {
             callback();
             const msgId = data._id;
@@ -162,7 +160,6 @@ function listenToEvents(socket, userId) {
             );
         } catch (error) {
             console.log("updateMessage " + "Error :- " + error);
-            // next(error);
         }
     });
 
@@ -189,10 +186,7 @@ exports.makeSocketConnection = (server) => {
 
     io.on("connection", async (socket) => {
         const userId = socket.handshake.query.userId;
-
-        console.log(
-            `-------------------- USER CONNECTED WITH USERID : ${userId} -------------------`
-        );
+        console.log(`-------------------- USER CONNECTED WITH USERID : ${userId} -------------------`);
         socket.join(userId);
         socketConnection = socket;
 

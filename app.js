@@ -6,8 +6,7 @@ dotenv.config({path: "config.env"});
 
 const database = require("./configs/dbConnection");
 const initializeFirebase = require("./configs/firebaseInit");
-const userRoutes = require( "./routers/user");
-const messageRoutes = require( "./routers/message");
+const apiRouter = require( "./routers/index");
 const {makeSocketConnection} = require( "./services/socketService");
 const customResponses = require( "./helpers/customResponses");
 const decodeIDToken = require( "./middlewares/tokenVerification");
@@ -32,8 +31,7 @@ initializeFirebase();
 app.use(customResponses);
 
 // Define the routes
-app.use("/users", userRoutes);
-app.use("/messages", messageRoutes);
+app.use("/api/v1", apiRouter);
 
 app.use(decodeIDToken);
 
