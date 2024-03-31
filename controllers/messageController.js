@@ -6,9 +6,6 @@ const PrivateMessageModel = require( "../models/privateMessage");
 const socketService = require("../services/socketService");
 
 exports.addToRecentChat = async (recentChatModel, isUser1) => {
-    console.log(
-        "INCREMENT ID ! - " + util.inspect(recentChatModel, { depth: null })
-    );
     try {
         recentChatModel.user1_local_updated = true;
         recentChatModel.user2_local_updated = true;
@@ -22,7 +19,6 @@ exports.updateRecentMessage = async (req,res,next) => {
     const updateObj = req.body;
     const _id = req.body._id;
     console.log("eq.body :- " + util.inspect(updateObj));
-    console.log("eq.body :- " +req.body._id);
     try {
         await RecentChatModel.findByIdAndUpdate(_id, updateObj);
         res.dataUpdateSuccess({ message: "Message Created Successfully" });
@@ -120,11 +116,9 @@ exports.getMissedRecentChatUpdate = async (userId) => {
             }
         ];
         const results = await RecentChatModel.aggregate(aggregationQuery).exec();
-        console.log("RESULT FOUND :- " + util.inspect(results));
-        results.forEach(async function(x){
-            console.log("FOUND :- " + util.inspect(x));
+        for (const x of results) {
             socketService.emitAddRecentChatEvent(userId,x);
-        });
+        }
 
     } catch (error) {
         console.log("ERROR OCCURRED in GETTING MISSED RECENT CHAT UPDATE MESSAGE :- " + error);
@@ -163,7 +157,6 @@ exports.updateMsgDeliverTime = async (req, res, next) => {
 };
 
 exports.updateMsgSeenTime = async (req, res, next) => {
-    console.log("getting error :- ");
     try {
         const msgId = req.body._id;
         const msgSeenTime = req.body.seen_at;
@@ -189,7 +182,6 @@ exports.updateMsgSeenTime = async (req, res, next) => {
 
         res.dataUpdateSuccess();
     } catch (error) {
-        console.log("error :- " + error);
         next(error);
     }
 };
@@ -204,7 +196,6 @@ exports.msgUpdatedLocallyForSender = async (req, res, next) => {
         );
         res.dataUpdateSuccess();
     } catch (error) {
-        console.log("error :- " + error);
         next(error);
     }
 };

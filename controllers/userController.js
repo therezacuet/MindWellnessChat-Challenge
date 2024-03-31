@@ -96,10 +96,8 @@ exports.searchSingleUser = async (req, res, next) => {
                 },
             ];
         }
-        console.log("aggregationQuery :- " + util.inspect(aggregationQuery));
         const aggregate = userModel.aggregate(aggregationQuery);
         const results = await aggregate.exec();
-        console.log("search results :- " + util.inspect(results));
         return res.dataFetchSuccess({ data: results });
     } catch (error) {
         next(error);
@@ -113,7 +111,6 @@ exports.getSingleUser = async (req, res, next) => {
             throw errorResponse.idNotFoundError();
         }
         const userInformation = await userModel.findById(_id);
-        console.log(userInformation);
         res.dataFetchSuccess({ data: userInformation });
     } catch (error) {
         next(error);
@@ -121,7 +118,6 @@ exports.getSingleUser = async (req, res, next) => {
 };
 
 exports.updateUserToken = async (req, res, next) => {
-    console.log("update user token body :- " + util.inspect(req.body));
     try {
         const _id = req.body._id;
         if (!_id) {
@@ -143,10 +139,6 @@ exports.updateUser = async (req, res, next) => {
 
         nameOfUser = nameOfUser === undefined ? null : nameOfUser;
         compressedImageOfUser = compressedImageOfUser === undefined ? null : compressedImageOfUser;
-
-        console.log("nameOfUser id :- " + _id);
-        console.log("nameOfUser nameOfUser :- " + nameOfUser);
-        console.log("compressedImageOfUser compressedImageOfUser :- " + compressedImageOfUser);
 
         let aggregationQuery = [
             {
@@ -240,10 +232,8 @@ exports.updateUser = async (req, res, next) => {
             delete x['matchedIndex'];
             await recentChatModel.findByIdAndUpdate(x._id,x);
         },);
-        console.log("LOL :- "  +util.inspect(results));
         res.dataUpdateSuccess();
     } catch (error) {
-        console.log("error :- " + error);
         next(error);
     }
 };
@@ -255,7 +245,6 @@ exports.getUserBackUpDetails = async (req, res, next) => {
             throw errorResponse.idNotFoundError();
         }
         const userInformation = await recentChatModel.find({participants : _id});
-        console.log("userInformation :- " + util.inspect(userInformation));
         let isBackUpFound = false;
         if(Object.keys(userInformation).length != 0){
             isBackUpFound = true;
@@ -270,27 +259,23 @@ exports.getUserBackUpDetails = async (req, res, next) => {
 exports.getUserBackUpData = async (req, res, next) => {
     try {
         const _id = req.query._id;
-        console.log('userId ',_id);
         if (!_id) {
             throw errorResponse.idNotFoundError();
         }
         const userInformation = await recentChatModel.find({participants : _id});
-        console.log("error 0 :- " + util.inspect(userInformation));
         res.dataFetchSuccess({ data: userInformation });
     } catch (error) {
-        console.log("error 1 :- " + error);
+        console.log("error :- " + error);
         next(error);
     }
 };
 
 exports.getUserConnectionStatus = async (req, res, next) => {
     try {
-        console.log("REq 0 :- " + req.query.id);
         const id = req.query.id;
         if (!id) {
             throw errorResponse.idNotFoundError();
         }
-        console.log("REq 1 :- " + id);
         const userInformation = await userModel.findById(id);
         res.dataFetchSuccess({ data: userInformation.isOnline });
     } catch (error) {
