@@ -211,9 +211,6 @@ class SocketService {
       data,
       ack: ([data]) async {
         callback();
-        // await _dataManager
-        //     .updateRecentChatTableData(_recentChatTableCompanion);
-        // await _dataManager.insertNewMessage(_localModel);
       },
     );
   }

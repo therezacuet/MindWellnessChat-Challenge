@@ -30,8 +30,7 @@ class ChatViewModel extends CustomBaseViewModel {
   late UserDataBasicModel userDataBasicModel;
   String? currentUserId;
   bool isSendBtnDisable = true;
-  final StreamController<List<MessagesTableData>> _streamController =
-      StreamController();
+  final StreamController<List<MessagesTableData>> _streamController = StreamController();
 
   //Required things for pagination
   List<MessagesTableData> listOfMessage = [];
@@ -46,20 +45,17 @@ class ChatViewModel extends CustomBaseViewModel {
   Timer? _timer;
   String selectedImageMsgId = "";
 
-  final StreamController<String> _userActivityStreamController =
-      StreamController<String>();
+  final StreamController<String> _userActivityStreamController = StreamController<String>();
   final ImagePicker _picker = ImagePicker();
 
   setUserData(UserDataBasicModel inputDataBasicModel) async {
     userDataBasicModel = inputDataBasicModel;
     currentUserId = await getAuthService().getUserid();
+    await getDataManager().saveCurrentParticipant(inputDataBasicModel.id);
   }
 
   listenForConnectionStatus() {
-    Stream<bool> userConnectionStatusChangeStreamController =
-        getSocketService().listenForUserConnectionStatus(userDataBasicModel.id);
-
-
+    Stream<bool> userConnectionStatusChangeStreamController = getSocketService().listenForUserConnectionStatus(userDataBasicModel.id);
     userConnectionStatusChangeStreamController.listen((event) {
       isOnline = event;
       if (event) {
@@ -116,6 +112,10 @@ class ChatViewModel extends CustomBaseViewModel {
   setSendBtnStatus(bool isDisable) {
     isSendBtnDisable = isDisable;
     notifyListeners();
+  }
+
+  clearCurrentParticipantData() async {
+    await getDataManager().clearCurrentParticipant();
   }
 
   Future<bool> downloadImage(String msgId, String networkUrl) async {

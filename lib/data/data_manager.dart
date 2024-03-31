@@ -198,4 +198,14 @@ class DataManager implements DataManagerHelper {
   Future<bool> isBackUpDataDownloadComplete(bool status) {
     return _sharedPreferenceService.isBackUpDataDownloadComplete(status);
   }
+
+  @override
+  Future<bool> clearCurrentParticipant() {
+    return _sharedPreferenceService.clearCurrentParticipant();
+  }
+
+  @override
+  Future<bool> saveCurrentParticipant(String participantId) {
+    return _sharedPreferenceService.saveCurrentParticipant(participantId);
+  }
 }

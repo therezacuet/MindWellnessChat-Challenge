@@ -45,7 +45,7 @@ class SharedPreferenceService implements SharedPreferenceHelper {
   Future<bool> isBackUpDataDownloadComplete(bool status) async{
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool("backupDataStatus", status);
+      prefs.setBool(SharedPrefConst.backupDataStatus, status);
       return true;
     } catch (e) {
       return false;
@@ -56,7 +56,27 @@ class SharedPreferenceService implements SharedPreferenceHelper {
   Future<bool> getBackUpDataDownloadStatus( ) async{
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      return prefs.getBool("backupDataStatus") ?? false;
+      return prefs.getBool(SharedPrefConst.backupDataStatus) ?? false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> clearCurrentParticipant() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      return prefs.remove(SharedPrefConst.currentParticipant);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> saveCurrentParticipant(String participantId) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      return prefs.setString(SharedPrefConst.currentParticipant, participantId);
     } catch (e) {
       return false;
     }

@@ -7,4 +7,6 @@ abstract class SharedPreferenceHelper{
   Future<bool> clearSharedPreference();
   Future<bool> isBackUpDataDownloadComplete(bool status);
   Future<bool> getBackUpDataDownloadStatus();
+  Future<bool> saveCurrentParticipant(String participantId);
+  Future<bool> clearCurrentParticipant();
 }

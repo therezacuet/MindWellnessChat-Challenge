@@ -52,6 +52,7 @@ void main() {
 }
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await showNotification(
+    message.data['id'],
     message.data['title'],
     message.data['body'],
     image: message.data['image'],

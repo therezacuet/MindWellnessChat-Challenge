@@ -23,7 +23,7 @@ class FirebasePushNotificationService {
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) {
         Map<String, dynamic>? notificationMessage = message.data;
-        showNotification(notificationMessage['title'], notificationMessage['body'], image: notificationMessage['image']);
+        showNotification(notificationMessage['id'], notificationMessage['title'], notificationMessage['body'], image: notificationMessage['image']);
       },
     );
 
@@ -35,10 +35,10 @@ class FirebasePushNotificationService {
   }
 }
 
-showNotification(String title, String message, {String? image}) async {
+showNotification(String senderId, String title, String message, {String? image}) async {
   bool shouldShowNotification = await isNotificationOn();
-
-  if (shouldShowNotification) {
+  bool isCurrent = await isCurrentParticipant(senderId);
+  if (shouldShowNotification && !isCurrent) {
     if (image != null && image.isNotEmpty) {
       AwesomeNotifications().createNotification(
           content: NotificationContent(
@@ -67,6 +67,16 @@ Future<bool> isNotificationOn() async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(SharedPrefConst.notificationStatus) ?? true;
+  } catch (e) {
+    return true;
+  }
+}
+
+Future<bool> isCurrentParticipant(String senderId) async {
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? currentParticipant = prefs.getString(SharedPrefConst.currentParticipant);
+    return currentParticipant == senderId ? true : false;
   } catch (e) {
     return true;
   }

@@ -27,8 +27,7 @@ class ChatView extends StatelessWidget {
           if (viewModel.isAllItemLoaded == false) {
             if (viewModel.isItemsLoading == false) {
               if (_msgScrollController.position.extentAfter < 700) {
-                if (viewModel.pageNumber * viewModel.itemPerPage ==
-                    viewModel.listOfMessage.length) {
+                if (viewModel.pageNumber * viewModel.itemPerPage == viewModel.listOfMessage.length) {
                   await viewModel.getNewItems();
                 }
               }
@@ -68,6 +67,7 @@ class ChatView extends StatelessWidget {
                             GestureDetector(
                               onTap: () {
                                 model.goToPreviousScreen();
+                                model.clearCurrentParticipantData();
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(right: 12),
@@ -94,7 +94,7 @@ class ChatView extends StatelessWidget {
                     ),
                     Flexible(
                         child: Padding(
-                          padding: EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.only(bottom: 10),
                           child: MsgDisplayWidget(_msgScrollController),
                         )
                     ),
