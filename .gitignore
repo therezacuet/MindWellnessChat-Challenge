@@ -64,7 +64,6 @@ node_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-.env
 
-serviceAccountKey.json
+/serviceAccount.json
+/.env
