@@ -62,19 +62,12 @@ class Client {
           (X509Certificate cert, String host, int port) => true;
       return client;
     };
-    if (kDebugMode) {
-      print("HEAEDR 99 100 :- $header");
-    }
-
     return _dio!;
   }
 }
 
 InterceptorsWrapper dioInterceptor = InterceptorsWrapper(
   onRequest: (options, handler) {
-    if (kDebugMode) {
-      print("options :- ${options.headers}");
-    }
     if (options.method == 'GET') {
       if (options.queryParameters.isNotEmpty) {
         options.queryParameters =

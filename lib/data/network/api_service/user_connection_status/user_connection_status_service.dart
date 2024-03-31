@@ -24,13 +24,10 @@ class UserConnectionStatusService extends UserConnectionStatusHelper {
           EndPoints.userConnectionStatus,
           queryParameters: userConnectionStatusModel.toJson());
 
-      print("_response.data :- ${response.data}");
-
-      UserConnectionStatusResponseModel _userConnectionStatusResponseModel =
+      UserConnectionStatusResponseModel userConnectionStatusResponseModel =
           UserConnectionStatusResponseModel.fromJson(response.data);
-      return ApiResult.success(data: _userConnectionStatusResponseModel);
+      return ApiResult.success(data: userConnectionStatusResponseModel);
     } catch (e) {
-      print("KKPQWD sa: - $e");
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
     }
   }

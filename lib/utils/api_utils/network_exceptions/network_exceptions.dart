@@ -115,10 +115,9 @@ abstract class NetworkExceptions with _$NetworkExceptions {
         }
         return networkExceptions;
       } on FormatException catch (e) {
-        return NetworkExceptions.formatException();
+        return const NetworkExceptions.formatException();
       } catch (e) {
-        print("Postive :- " + e.toString());
-        return NetworkExceptions.unexpectedError();
+        return const NetworkExceptions.unexpectedError();
       }
     } else {
       if (error.toString().contains("is not a subtype of")) {
@@ -144,7 +143,6 @@ abstract class NetworkExceptions with _$NetworkExceptions {
     }, methodNotAllowed: () {
       errorMessage = "Method Allowed";
     }, badRequest: (String error) {
-      print("JOJO :- " + error);
       errorMessage = error;
     }, unauthorisedRequest: () {
       errorMessage = "Unauthorised request";
@@ -163,7 +161,6 @@ abstract class NetworkExceptions with _$NetworkExceptions {
     }, defaultError: (String error,int errorCode) {
       errorMessage = error;
     }, formatException: () {
-      print("JOJO :- un 2");
       errorMessage = "Unexpected error occurred";
     }, notAcceptable: () {
       errorMessage = "Not acceptable";

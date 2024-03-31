@@ -1,4 +1,7 @@
 PODS:
+  - awesome_notifications (0.9.3):
+    - Flutter
+    - IosAwnCore (~> 0.9.3)
   - Firebase/Auth (10.22.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 10.22.0)
@@ -105,6 +108,7 @@ PODS:
     - TOCropViewController (~> 2.6.1)
   - image_picker_ios (0.0.1):
     - Flutter
+  - IosAwnCore (0.9.3)
   - libphonenumber_plugin (0.0.1):
     - Flutter
     - PhoneNumberKit
@@ -171,6 +175,7 @@ PODS:
   - TOCropViewController (2.6.1)
 
 DEPENDENCIES:
+  - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -202,6 +207,7 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleUtilities
     - GTMSessionFetcher
+    - IosAwnCore
     - libwebp
     - Mantle
     - nanopb
@@ -214,6 +220,8 @@ SPEC REPOS:
     - TOCropViewController
 
 EXTERNAL SOURCES:
+  awesome_notifications:
+    :path: ".symlinks/plugins/awesome_notifications/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
@@ -246,6 +254,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqlite3_flutter_libs/ios"
 
 SPEC CHECKSUMS:
+  awesome_notifications: 66d28ab7174ca2823b04d275cb043e0a4a3eb9cf
   Firebase: 797fd7297b7e1be954432743a0b3f90038e45a71
   firebase_auth: a5ecfe2441e1802beb8e07a6d5fa3f0cf309a4dd
   firebase_core: cc49b6648d6dd7570d9273a616cb1205260db91e
@@ -268,6 +277,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 0e876eea9782ec6462e91ab872711c357322c94f
   image_cropper: a3291c624a953049bc6a02e1f8c8ceb162a24b25
   image_picker_ios: b545a5f16c0fa88e3ecbbce3ed4de45567a8ec18
+  IosAwnCore: b8601fbb37f7b3560f31b84ebf55a72f65812e05
   libphonenumber_plugin: 48bf4078546377eedaab4aa54978cd0f6fa23072
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
@@ -285,6 +295,6 @@ SPEC CHECKSUMS:
   sqlite3_flutter_libs: af0e8fe9bce48abddd1ffdbbf839db0302d72d80
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
 
-PODFILE CHECKSUM: 2aeabf7fb756f7260faeae75cdabba93175001da
+PODFILE CHECKSUM: 740f971ffec4fce7858e6f6fe3ff0737e6f1074d
 
 COCOAPODS: 1.12.1

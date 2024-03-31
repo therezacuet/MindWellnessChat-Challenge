@@ -51,8 +51,6 @@ class SearchViewModel extends CustomBaseViewModel {
   }
 
   Future<List<UserDataBasicModel>> loadSearchUserData() async {
-
-    print("textForSearch : - " + textForSearch);
     List<UserDataBasicModel> returnList = [];
     if(textForSearch.isEmpty){
       returnList = [];
@@ -88,8 +86,6 @@ class SearchViewModel extends CustomBaseViewModel {
   }
 
   Future<List<UserDataBasicModel>> loadMoreData() async {
-    print("LOADING MORE DATA :- " + lastLoadedDocumentId.toString());
-
     UserSearchModel userSearchModel = UserSearchModel(
         searchFor: textForSearch, startAfterId: lastLoadedDocumentId);
     ApiResult<UserSearchResultList> searchResult =

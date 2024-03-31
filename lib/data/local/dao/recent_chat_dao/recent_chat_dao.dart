@@ -15,10 +15,6 @@ class RecentChatDao extends DatabaseAccessor<AppDatabase> with _$RecentChatDaoMi
 
   @override
   Future insertNewRecentChat(RecentChatLocalModel _recentChatModel) async {
-
-    print("JEIO :- " + _recentChatModel.toJson().toString());
-    print("JEIO :- " + _recentChatModel.userCompressedImage.toString());
-
     RecentChatTableCompanion recentChatTableCompanion = RecentChatTableCompanion(
       id: Value(_recentChatModel.id),
       user_name: Value(_recentChatModel.userName),

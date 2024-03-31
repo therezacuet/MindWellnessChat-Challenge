@@ -151,9 +151,6 @@ class AuthViewModel extends CustomIndexTrackingViewModel {
     String smsCode = enteredOtp.trim();
     String isSuccess = await _customBaseViewModel.getAuthService().signInWithOTP(smsCode,verificationId);
     if (isSuccess == "noError") {
-      if (kDebugMode) {
-        print("Phone number verified");
-      }
       phoneNumberVerified();
     } else {
       _customBaseViewModel.stopProgressBar();

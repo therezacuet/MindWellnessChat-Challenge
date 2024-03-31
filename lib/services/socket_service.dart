@@ -39,13 +39,16 @@ class SocketService {
   connectToSocket(String userId) async {
     idOfUser = userId;
     if (socket != null) {
-      print("NEW SOCKET DISPOSING");
+      if (kDebugMode) {
+        print("NEW SOCKET DISPOSING");
+      }
       socket!.dispose();
     }
 
     try {
-      print("NEW SOCKET CREATED");
-
+      if (kDebugMode) {
+        print("NEW SOCKET CREATED");
+      }
       socket = io(
           ApiConfig.baseUrl,
           OptionBuilder()
@@ -59,15 +62,14 @@ class SocketService {
         socket!.connect();
         socket!.onConnecting((data) => print("socket :-Connecting"));
         socket!.onConnect((_) async {
-            print("socket :-Connected");
+            if (kDebugMode) {
+              print("socket :-Connected");
+            }
             listenForIncomingMsg();
-            List<MessagesTableData> _notSentMsg =
-                await _dataManager.getNotSentMsg(userId);
+            List<MessagesTableData> notSentMsg = await _dataManager.getNotSentMsg(userId);
             startEmittingUserStatus(userId, true);
 
-            for (MessagesTableData msg in _notSentMsg) {
-              print("MSG FROM MOOR IS SENDING :- ${msg.msgContent}");
-
+            for (MessagesTableData msg in notSentMsg) {
               if (msg.msgContentType == MsgType.txt) {
                 Participants participants = Participants(
                     user1Id: msg.senderId, user2Id: msg.receiverId);
@@ -76,8 +78,7 @@ class SocketService {
                 UserBasicDataOfflineModel? userBasicDataOfflineModel = await _dataManager.getUserBasicDataOfflineModel();
 
                 if (userBasicDataOfflineModel != null) {
-                  PrivateMessageModel _privateMessageModel =
-                      PrivateMessageModel(
+                  PrivateMessageModel privateMessageModel = PrivateMessageModel(
                     id: msg.mongoId,
                     createdAt: currentTime,
                     msgContentType: msg.msgContentType,
@@ -98,7 +99,7 @@ class SocketService {
                   await CustomBaseViewModel().sendMessageWithDataModel(
                       inputText: msg.msgContent,
                       currentTime: currentTime,
-                      privateMessageModel: _privateMessageModel,
+                      privateMessageModel: privateMessageModel,
                       currentUserId: currentUserId,
                       name: msg.receiverName ?? "",
                       compressedProfileImage:
@@ -112,7 +113,9 @@ class SocketService {
         );
         socket!.onConnectTimeout((client) => print("socket :- timeout :-"));
         socket!.onDisconnect((data) {
-          print("socket :-DisConnect");
+          if (kDebugMode) {
+            print("socket :-DisConnect");
+          }
           socket!.clearListeners();
         });
 
@@ -123,10 +126,10 @@ class SocketService {
         socket!.onReconnectError((data) => print("socket :- onReconnectError"));
         socket!.onReconnect((data) => print("socket :- reconnected succesfull"));
       }
-
-      //socket?.emit("privateMsg", {"content": "Hello"});
     } catch (e) {
-      print("socket :- error :- ${e.toString()}");
+      if (kDebugMode) {
+        print("socket :- error :- ${e.toString()}");
+      }
     }
   }
 
@@ -138,7 +141,6 @@ class SocketService {
           "userStatus": status,
           "id": userId
         };
-        // print("EMITING STATUS :- "  + userConnectionData.toString());
         socket!.emit("userStatus", userConnectionData);
       },
     );
@@ -152,10 +154,12 @@ class SocketService {
     StreamController<bool> userConnectionStatusChangeStreamController =
         StreamController<bool>();
 
-    print("USER ID TO LIETEN :- " + userIdToListen);
+    if (kDebugMode) {
+      print("USER ID TO LISTEN :- $userIdToListen");
+    }
 
     socket!.on(
-      userIdToListen + "_status",
+      "${userIdToListen}_status",
       (data) async {
         userConnectionStatusChangeStreamController.add(data);
       },
@@ -169,7 +173,6 @@ class SocketService {
         StreamController<bool>();
 
     socket!.on(
-      // userIdToListen + "_typing",
       "typing",
       (data) async {
         userConnectionStatusChangeStreamController.add(data);
@@ -191,17 +194,18 @@ class SocketService {
     Map<String, dynamic> privateMessageFullModel = {};
     privateMessageFullModel.putIfAbsent(
         "privateMessageModel", () => privateMessageModel);
-    privateMessageFullModel.putIfAbsent(
-        "recentChatModel", () => recentChatServerModel);
+    privateMessageFullModel.putIfAbsent("recentChatModel", () => recentChatServerModel);
 
-    print("SOCKET EMIT EVENT :- " + "newPrivateMessage");
-
+    if (kDebugMode) {
+      print("SOCKET EMIT EVENT :- " + "newPrivateMessage");
+    }
     socket!.emitWithAck("newPrivateMessage", privateMessageFullModel, ack: ([data]) async {callback();});
   }
 
   emitUpdateMsgEvent(Map<String, dynamic> data, Function callback) {
-    print("SOCKET EMIT EVENT :- " + "updatePrivateMessage");
-
+    if (kDebugMode) {
+      print("SOCKET EMIT EVENT :- " + "updatePrivateMessage");
+    }
     socket!.emitWithAck(
       "updatePrivateMessage",
       data,
@@ -218,12 +222,16 @@ class SocketService {
   List<bool> processEnded = [];
 
   listenForIncomingMsg() async {
-    print("SOCKET LISNING FOR INCOMING EVENT");
+    if (kDebugMode) {
+      print("SOCKET LISTENING FOR INCOMING EVENT");
+    }
 
     socket!.on(
       "newPrivateMessage",
       (data) async {
-        print("SOCKET EVENT :- " + "newPrivateMessage :- " + data.toString());
+        if (kDebugMode) {
+          print("SOCKET EVENT :- newPrivateMessage :- $data");
+        }
         try {
           PrivateMessageModel _privateMessageModel = PrivateMessageModel.fromJson(data);
           MessagesTableCompanion _localModel = ModelConverters().convertMongoModelToLocalModel(_privateMessageModel);
@@ -235,11 +243,7 @@ class SocketService {
           participantList.sort();
 
           for (int i = 0; i < 5; i++) {
-            List<RecentChatTableData> _recentChatTable = await _dataManager
-                .getRecentChatTableDataFromUserIds(participantList);
-
-            print("LOOP STARTED");
-
+            List<RecentChatTableData> recentChatTable = await _dataManager.getRecentChatTableDataFromUserIds(participantList);
             for (int i = 0; i < 5; i++) {
               if (processStarted.isNotEmpty) {
                 await Future.delayed(const Duration(seconds: 1));
@@ -248,12 +252,10 @@ class SocketService {
               }
             }
 
-            if (_recentChatTable.isNotEmpty) {
-              String id = _recentChatTable[0].id;
-              int count = _recentChatTable[0].unread_msg ?? 1;
+            if (recentChatTable.isNotEmpty) {
+              String id = recentChatTable[0].id;
+              int count = recentChatTable[0].unread_msg ?? 1;
               processStarted.add(true);
-              print("LOOP COUNT :- " + count.toString());
-
               DeliverAtUpdateModel deliverUpdateModel = DeliverAtUpdateModel(
                   id: _privateMessageModel.id!,
                   deliveredAt: DateTime.now().millisecondsSinceEpoch,
@@ -273,32 +275,28 @@ class SocketService {
                         (_recentChatLatestData[0].unread_msg ?? 1) +
                             processStarted.length;
 
-                    print("totalMsgCount 0 :-  ${processStarted.length}");
-                    print("totalMsgCount 1 :-  $totalMsgCount");
-                    RecentChatTableCompanion _recentChatTableCompanion =
-                        RecentChatTableCompanion(
+                    RecentChatTableCompanion recentChatTableCompanion0 = RecentChatTableCompanion(
                             id: Value(id),
                             unread_msg: Value(totalMsgCount),
                             last_msg_time: _localModel.createdAt,
                             last_msg_text: _localModel.msgContent);
                     await _dataManager
-                        .updateRecentChatTableData(_recentChatTableCompanion);
+                        .updateRecentChatTableData(recentChatTableCompanion0);
                     processStarted = [];
                     processEnded = [];
                     await _dataManager.insertNewMessage(_localModel);
                   }
                 },
               );
-
-              // await _dataManager.updateMsgDeliverTime(_deliverUpdateModel);
               break;
             } else {
               await Future.delayed(const Duration(seconds: 1));
             }
           }
         } catch (e) {
-          print(
-              "SOCKET EVENT :- " + "newPrivateMessage ERROR:- " + e.toString());
+          if (kDebugMode) {
+            print("SOCKET EVENT :- " + "newPrivateMessage ERROR:- " + e.toString());
+          }
         }
       },
     );
@@ -306,8 +304,6 @@ class SocketService {
     socket!.on(
       "updateExistingMessageWithAcknowledgeApi",
       (data) async {
-        print("SOCKET EVENT :- " + "updateExistingMessageWithAcknowledgeApi");
-
         try {
           Map<String, dynamic> incomingJsonData = data;
           incomingJsonData.putIfAbsent("is_sent", () => true);
@@ -317,15 +313,11 @@ class SocketService {
           await _dataManager.updateExitingMsg(updateMessageModel);
           await _dataManager.msgUpdatedLocallyForSender(idModel);
         } catch (e) {
-          print("HELLO :-  " + e.toString());
         }
       },
     );
 
     socket!.on('newRecentChat', (data) async {
-      if (kDebugMode) {
-        print("SOCKET EVENT :- " + "newRecentChat :-  " + data.toString());
-      }
       try {
         RecentChatServerModel recentChatServerModel = RecentChatServerModel.fromJson(data);
         bool isUser1 = false;
@@ -348,10 +340,6 @@ class SocketService {
         );
 
         List<RecentChatTableData> recentChatTableData = await _dataManager.getRecentChatTableDataFromUserIds(recentChatLocalModel.participants);
-
-        if (kDebugMode) {
-          print("_recentChatLocalModel :- ${recentChatLocalModel.toJson()}");
-        }
 
         if (recentChatTableData.isEmpty) {
           await _dataManager.insertNewRecentChat(recentChatLocalModel);
@@ -378,9 +366,7 @@ class SocketService {
 
         updateObject.putIfAbsent("_id", () => recentChatLocalModel.id);
         updateObject.putIfAbsent(keyOfUserLocalUpdate, () => true);
-        if (kDebugMode) {
-          print('updateObject $updateObject');
-        }
+
         await _dataManager.updateRecentChat(updateObject);
       } catch (e) {}
     });

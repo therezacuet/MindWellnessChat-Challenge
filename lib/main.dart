@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,18 @@ void main() {
       // initialise firebase app
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
+      );
+
+      await AwesomeNotifications().initialize(
+        null,
+        [
+          NotificationChannel(
+            channelKey: 'basic_channel',
+            channelName: 'Basic notifications',
+            channelDescription: 'Notification channel for basic tests',
+            ledColor: Colors.white,
+          ),
+        ],
       );
 
       setupLocator();

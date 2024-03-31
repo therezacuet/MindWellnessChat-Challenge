@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,9 +23,7 @@ class FirebasePushNotificationService {
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) {
         Map<String, dynamic>? notificationMessage = message.data;
-        showNotification(
-            notificationMessage['title'], notificationMessage['body'],
-            image: notificationMessage['image']);
+        showNotification(notificationMessage['title'], notificationMessage['body'], image: notificationMessage['image']);
       },
     );
 
@@ -38,31 +39,34 @@ showNotification(String title, String message, {String? image}) async {
   bool shouldShowNotification = await isNotificationOn();
 
   if (shouldShowNotification) {
-    if (image != null) {
-      // AwesomeNotifications().createNotification(
-      //     content: NotificationContent(
-      //         id: Random().nextInt(2147483647),
-      //         title: title,
-      //         body: message,
-      //         channelKey: "basic_channel",
-      //         notificationLayout: NotificationLayout.BigPicture,
-      //         bigPicture: image));
+    if (image != null && image.isNotEmpty) {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: Random().nextInt(2147483647),
+              title: title,
+              body: message,
+              channelKey: "basic_channel",
+              notificationLayout: NotificationLayout.BigPicture,
+              bigPicture: image
+          )
+      );
     } else {
-      // AwesomeNotifications().createNotification(
-      //     content: NotificationContent(
-      //         id: Random().nextInt(2147483647),
-      //         title: title,
-      //         body: message,
-      //         channelKey: "basic_channel"));
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: Random().nextInt(2147483647),
+              title: title,
+              body: message,
+              channelKey: "basic_channel"
+          )
+      );
     }
   }
 }
 
 Future<bool> isNotificationOn() async {
-
   try {
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    return _prefs.getBool(SharedPrefConst.notificationStatus) ?? true;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(SharedPrefConst.notificationStatus) ?? true;
   } catch (e) {
     return true;
   }

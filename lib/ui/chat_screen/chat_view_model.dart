@@ -52,9 +52,6 @@ class ChatViewModel extends CustomBaseViewModel {
 
   setUserData(UserDataBasicModel inputDataBasicModel) async {
     userDataBasicModel = inputDataBasicModel;
-    if (kDebugMode) {
-      print("userDataBasicModel :- ${userDataBasicModel.id}");
-    }
     currentUserId = await getAuthService().getUserid();
   }
 
@@ -64,9 +61,6 @@ class ChatViewModel extends CustomBaseViewModel {
 
 
     userConnectionStatusChangeStreamController.listen((event) {
-      if (kDebugMode) {
-        print("userConnectionStatusChangeStreamController");
-      }
       isOnline = event;
       if (event) {
         _userActivityStreamController.add("Online");
@@ -79,9 +73,6 @@ class ChatViewModel extends CustomBaseViewModel {
   listenForTypingStatus() {
     Stream<bool> userTypingStreamController = getSocketService().listenForIsTyping(currentUserId!);
     userTypingStreamController.listen((event) {
-      if (kDebugMode) {
-        print("ACTION TYPING EVENT :- $event");
-      }
       if (event) {
         _userActivityStreamController.add(UserStatus.typing);
       } else {
@@ -130,7 +121,7 @@ class ChatViewModel extends CustomBaseViewModel {
   Future<bool> downloadImage(String msgId, String networkUrl) async {
     var tempDir = await getTemporaryDirectory();
     final targetPath = "${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}${basename(networkUrl)}";
-    bool result = await download2(networkUrl, targetPath);
+    bool result = await download(networkUrl, targetPath);
     if (result) {
       await getDataManager().updateMsgImageUrl(
           msgId: msgId, isNetworkUrl: false, url: targetPath);
@@ -140,7 +131,7 @@ class ChatViewModel extends CustomBaseViewModel {
     }
   }
 
-  Future<bool> download2(String url, String savePath) async {
+  Future<bool> download(String url, String savePath) async {
     try {
       Response response = await Dio().get(
         url,
@@ -171,7 +162,7 @@ class ChatViewModel extends CustomBaseViewModel {
     }
     currentUserId ??= await getAuthService().getUserid();
     Participants participants = Participants(user1Id: currentUserId!, user2Id: userDataBasicModel.id);
-    String randomMongoId1 = MongoUtils().generateUniqueMongoId();
+    String randomMongoId = MongoUtils().generateUniqueMongoId();
     int currentTime = DateTime.now().millisecondsSinceEpoch;
     String? networkImageUri;
     String? blurHashImage;
@@ -185,7 +176,7 @@ class ChatViewModel extends CustomBaseViewModel {
           receiverId: userDataBasicModel.id,
           receiverName: Value(userDataBasicModel.name),
           receiverCompressedProfileImage: Value(userDataBasicModel.compressedProfileImage),
-          mongoId: randomMongoId1,
+          mongoId: randomMongoId,
           createdAt: currentTime,
           localFileUrl: Value(localFileUrl),
           networkFileUrl: Value(networkImageUri),
@@ -195,7 +186,7 @@ class ChatViewModel extends CustomBaseViewModel {
       await getDataManager().insertNewMessage(newMessageObject);
 
     }else{
-      randomMongoId1 = msgTableData.mongoId;
+      randomMongoId = msgTableData.mongoId;
       localFileUrl = msgTableData.localFileUrl;
       networkImageUri = msgTableData.networkFileUrl;
 
@@ -208,14 +199,14 @@ class ChatViewModel extends CustomBaseViewModel {
     }
 
     if (localFileUrl != null && networkImageUri == null) {
-      selectedImageMsgId = randomMongoId1;
+      selectedImageMsgId = randomMongoId;
       networkImageUri = await uploadFiles(File(localFileUrl));
 
       if (networkImageUri != null) {
         // blurHashImage
         blurHashImage = await BlurHashGenerator().generateBlurHash(localFileUrl);
         await getDataManager().updateMsgImageUrl(
-            msgId: randomMongoId1,
+            msgId: randomMongoId,
             isNetworkUrl: true,
             url: networkImageUri,
             blurHashImageUri: blurHashImage
@@ -227,7 +218,7 @@ class ChatViewModel extends CustomBaseViewModel {
     }
 
     PrivateMessageModel privateMessageModel = PrivateMessageModel(
-        id: randomMongoId1,
+        id: randomMongoId,
         createdAt: currentTime,
         msgContentType: msgType,
         receiverId: userDataBasicModel.id,
@@ -285,7 +276,7 @@ class ChatViewModel extends CustomBaseViewModel {
       SeenAtUpdateModel seenAtUpdateModel = SeenAtUpdateModel(id: msgId, senderId: senderId, seenAt: seenTime);
       getSocketService().emitUpdateMsgEvent(seenAtUpdateModel.toJson(), () async {
         if (kDebugMode) {
-          print("Msg recieved" + msgId);
+          print("Msg received$msgId");
         }
         await getDataManager().updateSeenTimeLocallyForReceiver(msgId, seenTime);
 

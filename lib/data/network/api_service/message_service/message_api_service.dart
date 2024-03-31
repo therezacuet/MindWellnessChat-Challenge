@@ -23,8 +23,6 @@ class MessageApiService implements MessageApiHelper {
       PrivateMessageModel privateMessageModel,RecentChatServerModel _recentChatServerModel) async {
     Client tempClient = await _client.builder().setProtectedApiHeader();
 
-    print("privateMessageModel 1 : - " + tempClient.header.toString());
-
     Map<String,Object> messageModel = {};
     messageModel.putIfAbsent("privateMessageModel", () => privateMessageModel.toJson());
     messageModel.putIfAbsent("recentChatModel", () => _recentChatServerModel.toJson());

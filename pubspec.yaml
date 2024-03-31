@@ -44,6 +44,7 @@ dependencies:
   shimmer: ^3.0.0
   flutter_easyloading: ^3.0.5
   flutter_svg: ^2.0.10+1
+  awesome_notifications: ^0.9.3+1
 
   # animation
   flutter_staggered_animations: ^1.1.1

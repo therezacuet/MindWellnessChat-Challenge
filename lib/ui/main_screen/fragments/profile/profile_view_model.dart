@@ -211,7 +211,7 @@ class ProfileViewModel extends CustomBaseViewModel {
             barrierDismissible: true);
 
     if (sheetResponse != null && sheetResponse.data != null) {
-      print("_sheetResponse :- " + sheetResponse.data.toString());
+      print("_sheetResponse :- ${sheetResponse.data}");
 
       String name = sheetResponse.data['name'];
       String status = sheetResponse.data['status'];

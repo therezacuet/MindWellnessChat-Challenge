@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mind_wellness_chat/data/network/api_service/users/user_api_helper.dart';
 
 import '../../../../app/locator.dart';
@@ -55,7 +56,9 @@ class UserApiService implements UserApiHelper{
   Future<ApiResult<bool>> updateNameStatusUser(UserNameStatusUpdateModel userNameStatusUpdateModel) async{
     try {
       Client tempClient = await _client.builder().setProtectedApiHeader();
-      print(userNameStatusUpdateModel.toJson());
+      if (kDebugMode) {
+        print(userNameStatusUpdateModel.toJson());
+      }
       await tempClient.build().patch(EndPoints.updateUser,data: userNameStatusUpdateModel.toJson());
       return const ApiResult.success(data: true);
     } catch (e) {
@@ -84,7 +87,6 @@ class UserApiService implements UserApiHelper{
   Future<ApiResult<bool>> updateImageOfUser(UserImageModel userImageModel) async{
     try {
       Client tempClient = await _client.builder().setProtectedApiHeader();
-      print(userImageModel.toJson());
       await tempClient.build().patch(EndPoints.updateUser,data: userImageModel.toJson());
       return const ApiResult.success(data: true);
     } catch (e) {
@@ -125,7 +127,6 @@ class UserApiService implements UserApiHelper{
       }
       return ApiResult.success(data: listOfRecentChat);
     } catch (e) {
-      print("F SD :- $e");
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
     }
   }
