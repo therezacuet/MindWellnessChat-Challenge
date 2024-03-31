@@ -1,8 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
-const dotenv = require("dotenv");
 const process = require("process");
-dotenv.config({path: "config.env"});
+require("dotenv").config();
 
 const database = require("./configs/dbConnection");
 const initializeFirebase = require("./configs/firebaseInit");
@@ -12,7 +11,7 @@ const customResponses = require( "./helpers/customResponses");
 const decodeIDToken = require( "./middlewares/tokenVerification");
 
 // Define the port number
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.NODE_LOCAL_PORT || 5000;
 
 // Initialize the express app
 const app = express();

@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - ${NODE_LOCAL_PORT}:${NODE_DOCKER_PORT}
+    environment:
+      - MONGO_DB_ATLAS_URL=${MONGO_DB_ATLAS_URL}
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:

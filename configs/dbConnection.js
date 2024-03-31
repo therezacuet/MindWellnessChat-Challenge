@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const dbUri = process.env.MONGO_DB_URL;
+const dbUri = process.env.MONGO_DB_ATLAS_URL;
 
 exports.connectToDb = async (success,failure) => {
     mongoose.connect(dbUri, {
