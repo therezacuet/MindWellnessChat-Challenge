@@ -20,18 +20,18 @@ class MessageApiService implements MessageApiHelper {
 
   @override
   Future<ApiResult<bool>> sendPrivateMessage(
-      PrivateMessageModel privateMessageModel,RecentChatServerModel _recentChatServerModel) async {
+      PrivateMessageModel privateMessageModel,RecentChatServerModel recentChatServerModel) async {
     Client tempClient = await _client.builder().setProtectedApiHeader();
 
     Map<String,Object> messageModel = {};
     messageModel.putIfAbsent("privateMessageModel", () => privateMessageModel.toJson());
-    messageModel.putIfAbsent("recentChatModel", () => _recentChatServerModel.toJson());
+    messageModel.putIfAbsent("recentChatModel", () => recentChatServerModel.toJson());
 
     try {
       await tempClient
           // .setUrlEncoded()
           .build()
-          .post(EndPoints.sendMessage, data: messageModel);
+          .post(EndPoints.apiVersionV1, data: messageModel);
       return const ApiResult.success(data: true);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));

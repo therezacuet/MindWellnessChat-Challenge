@@ -27,7 +27,7 @@ class UserApiService implements UserApiHelper{
   @override
   Future<ApiResult<bool>> createUser(UserCreateModel userCreateModel) async{
     try {
-      await _client.builder().build().post(EndPoints.addUser,data: userCreateModel.toJson());
+      await _client.builder().build().post(EndPoints.users,data: userCreateModel.toJson());
       return const ApiResult.success(data: true);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
@@ -59,7 +59,7 @@ class UserApiService implements UserApiHelper{
       if (kDebugMode) {
         print(userNameStatusUpdateModel.toJson());
       }
-      await tempClient.build().patch(EndPoints.updateUser,data: userNameStatusUpdateModel.toJson());
+      await tempClient.build().patch(EndPoints.users,data: userNameStatusUpdateModel.toJson());
       return const ApiResult.success(data: true);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
@@ -75,7 +75,7 @@ class UserApiService implements UserApiHelper{
     Client tempClient = await _client.builder().setProtectedApiHeader();
 
     try {
-      Response response = await tempClient.build().get(EndPoints.getSingleUser,queryParameters: queryParameters);
+      Response response = await tempClient.build().get(EndPoints.users,queryParameters: queryParameters);
       UserBasicDataOfflineModel userBasicOfflineModel = UserBasicDataOfflineModel.fromJson(response.data['data']);
       return ApiResult.success(data: userBasicOfflineModel);
     } catch (e) {
@@ -87,7 +87,7 @@ class UserApiService implements UserApiHelper{
   Future<ApiResult<bool>> updateImageOfUser(UserImageModel userImageModel) async{
     try {
       Client tempClient = await _client.builder().setProtectedApiHeader();
-      await tempClient.build().patch(EndPoints.updateUser,data: userImageModel.toJson());
+      await tempClient.build().patch(EndPoints.users,data: userImageModel.toJson());
       return const ApiResult.success(data: true);
     } catch (e) {
       return ApiResult.failure(error: NetworkExceptions.getDioException(e));
