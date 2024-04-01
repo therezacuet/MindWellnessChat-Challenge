@@ -18,17 +18,15 @@
 - Notification on new message when app is in background or closed
 
 ## Screenshots
-| ![1](https://media.istockphoto.com/id/1446462856/photo/color-samples-palette-design-catalog-new-2023-trending-color-institute-18-1750-viva-magenta.webp?s=1024x1024&w=is&k=20&c=ouNhkk4lfY8Qa2kbwB9Auev9Zt3sUUH9Kda23dGq6DI=) | ![2](https://media.istockphoto.com/id/1446462856/photo/color-samples-palette-design-catalog-new-2023-trending-color-institute-18-1750-viva-magenta.webp?s=1024x1024&w=is&k=20&c=ouNhkk4lfY8Qa2kbwB9Auev9Zt3sUUH9Kda23dGq6DI=) | ![3](https://media.istockphoto.com/id/1446462856/photo/color-samples-palette-design-catalog-new-2023-trending-color-institute-18-1750-viva-magenta.webp?s=1024x1024&w=is&k=20&c=ouNhkk4lfY8Qa2kbwB9Auev9Zt3sUUH9Kda23dGq6DI=) |
-|:------:| :---: | :---: |
-| ![4](https://media.istockphoto.com/id/1446462856/photo/color-samples-palette-design-catalog-new-2023-trending-color-institute-18-1750-viva-magenta.webp?s=1024x1024&w=is&k=20&c=ouNhkk4lfY8Qa2kbwB9Auev9Zt3sUUH9Kda23dGq6DI=) | ![5](https://media.istockphoto.com/id/1446462856/photo/color-samples-palette-design-catalog-new-2023-trending-color-institute-18-1750-viva-magenta.webp?s=1024x1024&w=is&k=20&c=ouNhkk4lfY8Qa2kbwB9Auev9Zt3sUUH9Kda23dGq6DI=) | ![6](https://media.istockphoto.com/id/1446462856/photo/color-samples-palette-design-catalog-new-2023-trending-color-institute-18-1750-viva-magenta.webp?s=1024x1024&w=is&k=20&c=ouNhkk4lfY8Qa2kbwB9Auev9Zt3sUUH9Kda23dGq6DI=) |
+|   ![1](screenshots/signup.png)    |  ![2](screenshots/login.png)   |   ![3](screenshots/otp.png)    |
+|:---------------------------------:|:------------------------------:|:------------------------------:|
+| ![4](screenshots/recent_chat.png) | ![5](screenshots/search1.png)  | ![6](screenshots/search2.png)  |
+|    ![7](screenshots/chat.png)     | ![8](screenshots/profile1.png) | ![9](screenshots/profile2.png) |
 
 ## Video Demo
 [![Watch the video](https://img.youtube.com/vi/1QwvzZ1J1ZQ/maxresdefault.jpg)](https://youtu.be/1QwvzZ1J1ZQ)
 
-## APK Download to test the app
-- [Download APK](https://drive.google.com/file/d/1QwvzZ1J1ZQ/view?usp=sharing)
-
-## Tech Stack
+## Technology Used
 ### Backend
 - Nodejs
 - Express
