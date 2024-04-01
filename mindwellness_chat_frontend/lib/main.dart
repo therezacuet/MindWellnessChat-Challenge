@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mind_wellness_chat/services/firebase_push_notification_service.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -28,6 +29,8 @@ void main() {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
+
+      await dotenv.load(fileName: ".env");
 
       await AwesomeNotifications().initialize(
         'resource://drawable/ic_stat_notification',

@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class ApiConfig {
-  static String baseUrl = 'https://mindwellness-chat-backend.vercel.app';
+  static String baseUrl = dotenv.env['BASEURL']!;
 }

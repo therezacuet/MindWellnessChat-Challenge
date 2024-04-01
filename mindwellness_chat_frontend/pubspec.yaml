@@ -40,6 +40,7 @@ dependencies:
   stacked_themes: ^0.3.12
   stacked_hooks: ^0.2.3
   stacked_services: ^1.5.0
+  flutter_dotenv: ^5.1.0
 
   shimmer: ^3.0.0
   flutter_easyloading: ^3.0.5
@@ -130,9 +131,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/animations/
-    - assets/images/test/
     - assets/images/
     - assets/icons/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
