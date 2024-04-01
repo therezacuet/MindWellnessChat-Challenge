@@ -10,7 +10,6 @@
 - Phone OTP based authentication and authorization
 - User profile with name, profile picture and status update
 - Search other users and start chat with them
-- Search functionality and fuzzy searching
 - Image sharing on chat with image preview
 - Emoji support in chat
 - Auto download of messages on connecting
