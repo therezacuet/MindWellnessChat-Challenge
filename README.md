@@ -109,3 +109,8 @@
 - I have used `Mongodb Atlas` because of this is a fully managed system meaning you do not have to worry about the `maintenance`, `upkeep`, `uptime`, `servicing` or `updates`. But, I am also comfortable using Mongodb locally.
 - I have used Firebase for OTP authentication and push notifications. We can also use own backend for OTP authentication and push notifications service.
 - I have used firebase cloud storage for image storage and implement like a way so that we can store images in any cloud storage like S3 and get the URL of the image and store it in the database. Cloud storage is used because it is scalable, secure and very cost-effective.
+
+## Improvement & known issues
+- Test cases are not written for the backend and frontend.
+- The backend is not fully dockerized. Only the nodejs server is dockerized.
+- UI can be improved and more features can be added.
