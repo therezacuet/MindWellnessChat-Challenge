@@ -1,39 +1,111 @@
-# 🌟 Welcome to the ThoughtFull Engineering Challenge: MindWellnessChat Edition!
+# 🌟 Mind Wellness Chat 🌟
+### A chat application built using nodejs, express, socket.io, mongodb atlas, firebase and flutter.
 
-## We appreciate your interest in our front-end / full-stack practical coding challenge.
+## Features
+- Interactive UI interface like whatsapp
+- Offline caching of chat messages
+- Backup restore of chat messages on new device
+- Real-time chat with realtime online and typing indicator
+- Message sent, delivered and read status with time
+- Phone OTP based authentication and authorization
+- User profile with name, profile picture and status update
+- Search other users and start chat with them
+- Search functionality and fuzzy searching
+- Image sharing on chat with image preview
+- Emoji support in chat
+- Auto download of messages on connecting
+- Recent chat feature
+- Notification on new message when app is in background or closed
 
-#### Your mission is to craft an ingenious Mental Health Chat App that seamlessly connects users in a supportive virtual environment. This challenge dives deep into your front-end / full-stack development skills, examining your prowess in code structuring, styling, and best practices.
+## Screenshots
+| ![1](https://media.istockphoto.com/id/1446462856/photo/color-samples-palette-design-catalog-new-2023-trending-color-institute-18-1750-viva-magenta.webp?s=1024x1024&w=is&k=20&c=ouNhkk4lfY8Qa2kbwB9Auev9Zt3sUUH9Kda23dGq6DI=) | ![2](https://media.istockphoto.com/id/1446462856/photo/color-samples-palette-design-catalog-new-2023-trending-color-institute-18-1750-viva-magenta.webp?s=1024x1024&w=is&k=20&c=ouNhkk4lfY8Qa2kbwB9Auev9Zt3sUUH9Kda23dGq6DI=) | ![3](https://media.istockphoto.com/id/1446462856/photo/color-samples-palette-design-catalog-new-2023-trending-color-institute-18-1750-viva-magenta.webp?s=1024x1024&w=is&k=20&c=ouNhkk4lfY8Qa2kbwB9Auev9Zt3sUUH9Kda23dGq6DI=) |
+|:------:| :---: | :---: |
+| ![4](https://media.istockphoto.com/id/1446462856/photo/color-samples-palette-design-catalog-new-2023-trending-color-institute-18-1750-viva-magenta.webp?s=1024x1024&w=is&k=20&c=ouNhkk4lfY8Qa2kbwB9Auev9Zt3sUUH9Kda23dGq6DI=) | ![5](https://media.istockphoto.com/id/1446462856/photo/color-samples-palette-design-catalog-new-2023-trending-color-institute-18-1750-viva-magenta.webp?s=1024x1024&w=is&k=20&c=ouNhkk4lfY8Qa2kbwB9Auev9Zt3sUUH9Kda23dGq6DI=) | ![6](https://media.istockphoto.com/id/1446462856/photo/color-samples-palette-design-catalog-new-2023-trending-color-institute-18-1750-viva-magenta.webp?s=1024x1024&w=is&k=20&c=ouNhkk4lfY8Qa2kbwB9Auev9Zt3sUUH9Kda23dGq6DI=) |
 
+## Video Demo
+[![Watch the video](https://img.youtube.com/vi/1QwvzZ1J1ZQ/maxresdefault.jpg)](https://youtu.be/1QwvzZ1J1ZQ)
 
-### Task Overview:
+## APK Download to test the app
+- [Download APK](https://drive.google.com/file/d/1QwvzZ1J1ZQ/view?usp=sharing)
 
-Your goal is to construct a user-centric Mental Health Chat App that fosters meaningful conversations between users. Drawing inspiration from popular messaging apps like WhatsApp, design an engaging platform that facilitates real-time chat experiences. While we offer mockup to guide the app's visual appeal, there are no rigid business rules or constraints. We encourage you to unleash your creativity and technical know-how, crafting a chat application that stands out. Complexity is your playground.
+## Tech Stack
+### Backend
+- Nodejs
+- Express
+- Socket.io
+- Mongodb Atlas
+- Firebase
+- JWT
+- Dockerized deployment
 
-<p align="center">
-<img src="https://github.com/ThoughtFull-World/MindWellnessChat-Challenge/assets/131954589/74a58917-406d-45b1-b5a8-caf70f4be7d7" width="322" height="780">
-</p>
+### Frontend
+- Flutter
+- Firebase
+    - OTP authentication
+    - Cloud storage for image storage
+    - Cloud messaging for push notifications
+- Provider
+- Socket.io client
+- Dio
+- Database
+    - Shared Preferences
+    - Drift database for offline caching
+- Image
+    - Image cropper
+    - Image compressor
+- MVVM architecture
+- GetX for navigation and state management
+- Material UI
 
-### Prerequisites:
+### Future Scope
+- Group chat
+- Message reactions
+- Voice messages
+- Message deletion
+- Message forwarding
+- Chat archiving
+- User blocking
+- etc
 
-No specific prerequisites are imposed. Our primary tech stack includes, but is not limited to React JS, React Native, Node.js, and other relevant technologies. Opt for languages and tools you are most comfortable with.
+## Backend Installation
+### Docker Installation
+- Clone the repository to your local machine.
+- Install docker and docker-compose on your machine.
+- Create a `.env` file in the root directory of the backend repository and add the following environment variables.
+  ```
+  NODE_LOCAL_PORT=6868
+  NODE_DOCKER_PORT=8080
+  MONGO_DB_ATLAS_URL=<mongodb atlas connection string>
+- Run the backend server by running `docker-compose up`
+- The backend server will be running on `http://localhost:6868` for local development
+- The backend server will be running on `http://localhost:8080` for dockerized deployment
 
+### Manual Installation
+- Clone the repository to your local machine.
+- Install the necessary dependencies by running `npm install` for backend repositories.
+- Add google firebase service account json file named `serviceAccount.json` in the root directory of the backend repository.
+- Create a `.env` file in the root directory of the backend repository and add the following environment variables.
+  ```
+  NODE_LOCAL_PORT=6868
+  NODE_DOCKER_PORT=8080
+  MONGO_DB_ATLAS_URL=<mongodb atlas connection string>
+- Run the backend server by running `npm start`
+- The backend server will be running on `http://localhost:6868`
 
-### Key Features:
+## Frontend Installation
+- Clone the repository to your local machine and open in android studio or visual studio code.
+- Create env file with name `.env` at root of this project.
+- Paste your backend URL in env file as shown below.
+  ```
+  BASEURL=[YOUR_BACKEND_URL]
+- Change package name if you want.
+- Create a firebase project and add `google-services.json` file in the `android/app` directory and `GoogleService-Info.plist` file in the `ios/Runner` directory.
+- Install the necessary dependencies by running `flutter pub get` for frontend repositories.
+- Run the frontend application by running `flutter run`
+- The frontend application will be running on your connected device or emulator.
+- You can also build the apk by running `flutter build apk` or `flutter build ios` for ios.
 
-* Craft a simplified real-time chat interface.
-* Elevate the user experience by showcasing user avatars.
-* Enhance engagement by displaying delivery/read status indicators.
-* Add an interactive touch by incorporating chat timestamps.
-* Optional: Implement emoticon support for an expressive chat experience.
-
-
-### Submission Guidelines:
-- [x] Start by forking this repository. Upon completion, submit a Pull Request to share your solution.
-- [x] Provide clear, concise instructions for running the app, installing dependencies, and other necessary information.
-- [x] Leverage version control to document your coding journey, allowing us to witness your development process.
-
-### Questions?
-
-Feel free to reach out if you encounter queries or need clarification while crafting your solution. Direct your questions to tech@thoughtfull.world.
-
-**May the coding muse be with you! Show us your brilliance and innovation.** 🚀
+### Notes
+- I have used `Mongodb Atlas` because of this is a fully managed system meaning you do not have to worry about the `maintenance`, `upkeep`, `uptime`, `servicing` or `updates`. But, I am also comfortable using Mongodb locally.
+- I have used Firebase for OTP authentication and push notifications. We can also use own backend for OTP authentication and push notifications service.
+- I have used firebase cloud storage for image storage and implement like a way so that we can store images in any cloud storage like S3 and get the URL of the image and store it in the database. Cloud storage is used because it is scalable, secure and very cost-effective.
