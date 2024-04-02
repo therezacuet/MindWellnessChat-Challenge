@@ -1,5 +1,5 @@
 # 🌟 Mind Wellness Chat 🌟
-### A chat application built using nodejs, express, socket.io, mongodb atlas, firebase and flutter.
+### A chat application built using Node.js, express, socket.io, mongodb atlas, firebase and flutter.
 
 ## Features
 - Interactive UI interface like whatsapp
@@ -109,5 +109,4 @@
 
 ## Improvement & known issues
 - Test cases are not written for the backend and frontend.
-- The backend is not fully dockerized. Only the nodejs server is dockerized.
 - UI can be improved and more features can be added.
