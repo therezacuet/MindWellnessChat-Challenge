@@ -94,7 +94,7 @@
 - Create env file with name `.env` at root of this project.
 - Paste your backend URL in env file as shown below.
   ```
-  BASEURL=[YOUR_BACKEND_URL]
+  BASEURL=[YOUR_BACKEND_URL] // http://your_ip:6868 or http://localhost:6868
 - Change package name if you want.
 - Create a firebase project and add `google-services.json` file in the `android/app` directory and `GoogleService-Info.plist` file in the `ios/Runner` directory.
 - Install the necessary dependencies by running `flutter pub get` for frontend repositories.
