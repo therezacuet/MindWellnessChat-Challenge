@@ -193,7 +193,7 @@ class CustomBaseViewModel extends BaseViewModel {
     // In Android we need to request the storage permission,
     // while in iOS is the photos permission
     if (Platform.isAndroid) {
-      result = await Permission.storage.request();
+      result = await Permission.manageExternalStorage.request();
     } else {
       result = await Permission.photos.request();
     }
