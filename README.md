@@ -23,7 +23,7 @@
 |    ![7](screenshots/chat.png)     | ![8](screenshots/profile1.png) | ![9](screenshots/profile2.png) |
 
 ## Video Demo
-[![Watch the video](https://img.youtube.com/vi/1QwvzZ1J1ZQ/maxresdefault.jpg)](https://youtu.be/1QwvzZ1J1ZQ)
+[![Watch the video](screenshots/video_play.gif)](https://www.loom.com/share/7e4e0c20a3a74bdd939ac795cad609d8?sid=55f5325d-8861-449f-8e25-c66c0b0955c4)
 
 ## Technology Used
 ### Backend
